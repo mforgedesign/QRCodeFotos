@@ -339,6 +339,28 @@ h1 {
   margin: 1rem auto;
 }
 
+/* ── Name Modal ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 1.5rem;
+}
+
+.modal-box {
+  background: var(--bg-card);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 360px;
+  width: 100%;
+  text-align: center;
+}
+
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
@@ -352,7 +374,29 @@ h1 {
 </head>
 <body>
 
-<!-- ═══════════ WELCOME SCREEN ═══════════ -->
+<!-- ═══════════ NAME MODAL ═══════════ -->
+<div id="name-modal" style="display:none;">
+  <div class="modal-overlay">
+    <div class="modal-box">
+      <div class="logo-orb" style="width:80px;height:80px;margin-bottom:1.5rem;"></div>
+      <h2 style="color:var(--gold);font-size:1.4rem;margin-bottom:0.5rem;">Qual seu nome?</h2>
+      <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:1.5rem;line-height:1.5;">
+        Para organizar as fotos na galeria da Giovana, nos diga seu nome.
+      </p>
+      <input type="text" id="guest-name" placeholder="Seu nome ou apelido"
+        maxlength="60" autocomplete="off"
+        style="width:100%;padding:0.9rem 1.2rem;font-size:1rem;font-family:inherit;
+               background:var(--bg-card);border:1px solid rgba(201,168,76,0.3);
+               border-radius:12px;color:var(--text);outline:none;
+               margin-bottom:1rem;text-align:center;">
+      <button class="btn-primary" style="width:100%;" id="btn-name-confirm" onclick="confirmName()">
+        Confirmar e Abrir Câmera
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ WELCOME SCREEN ══════════= -->
 <div id="welcome-screen">
   <div class="logo-orb"></div>
   <h1>XV GIOVANA</h1>
@@ -361,7 +405,7 @@ h1 {
     <p>Bem-vindo ao sistema de fotos da festa de XV da Giovana!<br><br>
     Para registrar os melhores momentos de hoje, clique no botão abaixo para liberar o acesso seguro à sua câmera.</p>
   </div>
-  <button class="btn-primary" id="btn-start" onclick="startCamera()">
+  <button class="btn-primary" id="btn-start" onclick="showNameModal()">
     📷 Permitir Câmera e Tirar Foto
   </button>
 </div>
@@ -415,6 +459,27 @@ const API_URL = 'https://qrfotos.duckdns.org/upload';
 let currentStream = null;
 let useFrontCamera = false;
 let isUploading = false;
+let guestName = '';
+
+// ═══════════ NAME MODAL ═══════════
+function showNameModal() {
+  document.getElementById('name-modal').style.display = 'block';
+  setTimeout(() => document.getElementById('guest-name').focus(), 300);
+}
+
+function confirmName() {
+  const input = document.getElementById('guest-name');
+  guestName = input.value.trim() || 'Anônimo';
+  document.getElementById('name-modal').style.display = 'none';
+  startCamera();
+}
+
+// Enter confirma o nome
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && document.getElementById('name-modal').style.display !== 'none') {
+    confirmName();
+  }
+});
 
 const video = document.getElementById('camera-video');
 const captureCanvas = document.getElementById('capture-canvas');
@@ -578,6 +643,7 @@ async function confirmPhoto() {
 
     const formData = new FormData();
     formData.append('image', blob, 'capture.jpg');
+    formData.append('nome', guestName);
 
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 15000);
