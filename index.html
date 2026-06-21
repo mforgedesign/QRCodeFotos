@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>XV Giovana — Fotos</title>
+<style>
+:root {
+  --gold: #C9A84C;
+  --gold-light: #E8D48B;
+  --rose: #C77B8B;
+  --rose-dark: #8B4557;
+  --bg: #1A0A10;
+  --bg-card: #2A1018;
+  --text: #F5EDE0;
+  --text-muted: #A08090;
+  --success: #4CAF50;
+  --danger: #E53935;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Splash / Welcome ── */
+#welcome-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, var(--bg) 0%, #2A0A18 50%, var(--bg) 100%);
+}
+
+.logo-orb {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--gold-light), var(--gold), var(--rose-dark));
+  box-shadow: 0 0 40px rgba(201, 168, 76, 0.4), 0 0 80px rgba(201, 168, 76, 0.15);
+  margin-bottom: 2rem;
+  animation: pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 40px rgba(201, 168, 76, 0.4), 0 0 80px rgba(201, 168, 76, 0.15); }
+  50% { box-shadow: 0 0 60px rgba(201, 168, 76, 0.6), 0 0 120px rgba(201, 168, 76, 0.25); }
+}
+
+h1 {
+  font-size: 2rem;
+  font-weight: 400;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+  max-width: 320px;
+}
+
+.instructions {
+  background: var(--bg-card);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  max-width: 340px;
+  width: 100%;
+}
+
+.instructions p {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 2.5rem;
+  font-size: 1rem;
+  font-family: inherit;
+  letter-spacing: 0.08em;
+  color: var(--bg);
+  background: linear-gradient(135deg, var(--gold), var(--gold-light));
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(201, 168, 76, 0.3);
+  -webkit-appearance: none;
+}
+
+.btn-primary:hover, .btn-primary:active {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(201, 168, 76, 0.5);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Camera Screen ── */
+#camera-screen {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 10;
+}
+
+#video-container {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#camera-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#capture-canvas {
+  display: none;
+}
+
+/* ── Camera Overlay UI ── */
+.camera-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 1rem;
+  padding-top: max(1rem, env(safe-area-inset-top));
+  background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.camera-header span {
+  font-size: 0.8rem;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+}
+
+.btn-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(201, 168, 76, 0.4);
+  background: rgba(0,0,0,0.4);
+  color: var(--gold);
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-appearance: none;
+}
+
+.camera-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.btn-capture {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 4px solid var(--gold);
+  background: rgba(201, 168, 76, 0.15);
+  cursor: pointer;
+  position: relative;
+  -webkit-appearance: none;
+  transition: all 0.2s;
+}
+
+.btn-capture::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: var(--gold);
+  transition: all 0.2s;
+}
+
+.btn-capture:active::after {
+  background: var(--gold-light);
+  transform: scale(0.9);
+}
+
+/* ── Review Screen ── */
+#review-screen {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 30;
+}
+
+#review-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.review-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.5rem;
+  padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  z-index: 35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.btn-action {
+  padding: 0.9rem 2rem;
+  font-size: 0.95rem;
+  font-family: inherit;
+  letter-spacing: 0.06em;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn-delete {
+  background: rgba(229, 57, 53, 0.15);
+  color: var(--danger);
+  border: 1px solid rgba(229, 57, 53, 0.4);
+}
+
+.btn-confirm {
+  background: linear-gradient(135deg, var(--success), #66BB6A);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+}
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  top: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  background: var(--bg-card);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  color: var(--text);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  z-index: 100;
+  transition: transform 0.4s ease;
+  text-align: center;
+  max-width: 320px;
+  width: 90%;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ── Error / Permission Denied ── */
+#error-screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  text-align: center;
+}
+
+.error-icon {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+.error-text {
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  max-width: 320px;
+}
+
+/* ── Loading spinner ── */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(201, 168, 76, 0.2);
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 1rem auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 380px) {
+  h1 { font-size: 1.6rem; }
+  .btn-capture { width: 64px; height: 64px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ WELCOME SCREEN ═══════════ -->
+<div id="welcome-screen">
+  <div class="logo-orb"></div>
+  <h1>XV GIOVANA</h1>
+  <p class="subtitle">Sistema de Fotos</p>
+  <div class="instructions">
+    <p>Bem-vindo ao sistema de fotos da festa de XV da Giovana!<br><br>
+    Para registrar os melhores momentos de hoje, clique no botão abaixo para liberar o acesso seguro à sua câmera.</p>
+  </div>
+  <button class="btn-primary" id="btn-start" onclick="startCamera()">
+    📷 Permitir Câmera e Tirar Foto
+  </button>
+</div>
+
+<!-- ═══════════ CAMERA SCREEN ═══════════ -->
+<div id="camera-screen">
+  <div id="video-container">
+    <video id="camera-video" autoplay playsinline muted></video>
+  </div>
+  <div class="camera-header">
+    <span>XV GIOVANA</span>
+    <button class="btn-icon" id="btn-flip" onclick="flipCamera()" title="Trocar câmera">🔄</button>
+  </div>
+  <div class="camera-footer">
+    <button class="btn-capture" id="btn-capture" onclick="capturePhoto()" title="Capturar"></button>
+  </div>
+</div>
+
+<!-- ═══════════ REVIEW SCREEN ═══════════ -->
+<div id="review-screen">
+  <canvas id="review-canvas"></canvas>
+  <div class="review-footer">
+    <button class="btn-action btn-delete" onclick="deletePhoto()">🗑 Apagar</button>
+    <button class="btn-action btn-confirm" onclick="confirmPhoto()">✓ Ficou Boa</button>
+  </div>
+</div>
+
+<!-- ═══════════ ERROR SCREEN ═══════════ -->
+<div id="error-screen">
+  <div class="error-icon">📵</div>
+  <h2 style="color: var(--gold); margin-bottom: 1rem;">Câmera Bloqueada</h2>
+  <p class="error-text" id="error-text">
+    Você precisa liberar a permissão de câmera do seu navegador para participar.<br><br>
+    Por favor, atualize a página e clique em "Permitir", ou acesse as configurações (ícone de cadeado na barra de endereços) para liberar.
+  </p>
+  <button class="btn-primary" onclick="location.reload()">🔄 Tentar Novamente</button>
+</div>
+
+<!-- ═══════════ TOAST ═══════════ -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════ HIDDEN CANVAS ═══════════ -->
+<canvas id="capture-canvas" style="display:none;"></canvas>
+
+<script>
+// ═══════════ CONFIG ═══════════
+// URL do backend — será substituída pelo domínio real da VPS
+const API_URL = 'https://YOUR_VPS_DOMAIN/upload';
+
+// ═══════════ STATE ═══════════
+let currentStream = null;
+let useFrontCamera = false;
+let isUploading = false;
+
+const video = document.getElementById('camera-video');
+const captureCanvas = document.getElementById('capture-canvas');
+const reviewCanvas = document.getElementById('review-canvas');
+const captureCtx = captureCanvas.getContext('2d');
+const reviewCtx = reviewCanvas.getContext('2d');
+
+// ═══════════ CAMERA ═══════════
+async function startCamera() {
+  const btn = document.getElementById('btn-start');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner" style="width:24px;height:24px;border-width:2px;margin:0"></div> Carregando...';
+
+  try {
+    const stream = await getCameraStream(false);
+    await attachStream(stream);
+    showScreen('camera-screen');
+  } catch (err) {
+    console.error('[Camera Error]', err.name, err.message);
+    btn.disabled = false;
+    btn.innerHTML = '📷 Permitir Câmera e Tirar Foto';
+
+    if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+      showScreen('error-screen');
+    } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+      document.getElementById('error-text').textContent = 'Nenhuma câmera encontrada neste dispositivo.';
+      showScreen('error-screen');
+    } else {
+      // Tenta fallback genérico
+      try {
+        const fallback = await navigator.mediaDevices.getUserMedia({ video: true });
+        await attachStream(fallback);
+        showScreen('camera-screen');
+      } catch (e2) {
+        document.getElementById('error-text').textContent = 'Não foi possível acessar a câmera. Verifique as permissões do navegador.';
+        showScreen('error-screen');
+      }
+    }
+  }
+}
+
+async function getCameraStream(frontCamera) {
+  // Tenta exact primeiro, depois ideal, depois qualquer
+  const constraints = frontCamera
+    ? [
+        { video: { facingMode: { exact: 'user' } } },
+        { video: { facingMode: 'user' } },
+        { video: true }
+      ]
+    : [
+        { video: { facingMode: { exact: 'environment' } } },
+        { video: { facingMode: 'environment' } },
+        { video: true }
+      ];
+
+  let lastErr;
+  for (const c of constraints) {
+    try {
+      return await navigator.mediaDevices.getUserMedia(c);
+    } catch (e) {
+      lastErr = e;
+      if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError') throw e;
+      // OverconstrainedError — tenta próximo
+    }
+  }
+  throw lastErr;
+}
+
+async function attachStream(stream) {
+  if (currentStream) {
+    currentStream.getTracks().forEach(t => t.stop());
+  }
+  currentStream = stream;
+  video.srcObject = stream;
+
+  // Aguarda metadata para garantir dimensões
+  return new Promise((resolve) => {
+    video.onloadedmetadata = () => {
+      video.play().then(resolve).catch(resolve);
+    };
+    // Timeout de segurança
+    setTimeout(resolve, 2000);
+  });
+}
+
+async function flipCamera() {
+  useFrontCamera = !useFrontCamera;
+  try {
+    const stream = await getCameraStream(useFrontCamera);
+    await attachStream(stream);
+  } catch (err) {
+    console.error('[Flip Error]', err);
+    useFrontCamera = !useFrontCamera; // Reverte
+    showToast('Não foi possível trocar a câmera.');
+  }
+}
+
+// ═══════════ CAPTURE ═══════════
+function capturePhoto() {
+  if (!currentStream) return;
+
+  const vw = video.videoWidth || 1280;
+  const vh = video.videoHeight || 720;
+
+  // Downscale para economizar memória (máx 1920 no maior lado)
+  const MAX = 1920;
+  let w = vw, h = vh;
+  if (w > MAX || h > MAX) {
+    if (w >= h) { h = Math.round(h * MAX / w); w = MAX; }
+    else { w = Math.round(w * MAX / h); h = MAX; }
+  }
+
+  captureCanvas.width = w;
+  captureCanvas.height = h;
+  captureCtx.drawImage(video, 0, 0, w, h);
+
+  // Copia para review
+  reviewCanvas.width = w;
+  reviewCanvas.height = h;
+  reviewCtx.drawImage(captureCanvas, 0, 0);
+
+  showScreen('review-screen');
+}
+
+// ═══════════ REVIEW ACTIONS ═══════════
+function deletePhoto() {
+  captureCtx.clearRect(0, 0, captureCanvas.width, captureCanvas.height);
+  reviewCtx.clearRect(0, 0, reviewCanvas.width, reviewCanvas.height);
+  showScreen('camera-screen');
+}
+
+async function confirmPhoto() {
+  if (isUploading) return;
+  isUploading = true;
+
+  const btn = document.querySelector('.btn-confirm');
+  const originalText = btn.innerHTML;
+  btn.innerHTML = '<div class="spinner" style="width:20px;height:20px;border-width:2px;margin:0"></div> Salvando...';
+
+  // 1) Download local (sempre tenta)
+  let localSaved = false;
+  try {
+    const dataURL = captureCanvas.toDataURL('image/jpeg', 0.90);
+    const a = document.createElement('a');
+    a.href = dataURL;
+    a.download = 'XV_Giovana_Lembranca_' + Date.now() + '.jpg';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    localSaved = true;
+  } catch (e) {
+    console.error('[Download Error]', e);
+  }
+
+  // 2) Upload para servidor (não-bloqueante para UX)
+  let serverSaved = false;
+  try {
+    const blob = await new Promise((resolve, reject) => {
+      captureCanvas.toBlob(b => b ? resolve(b) : reject(new Error('toBlob failed')), 'image/jpeg', 0.85);
+    });
+
+    const formData = new FormData();
+    formData.append('image', blob, 'capture.jpg');
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+
+    const resp = await fetch(API_URL, {
+      method: 'POST',
+      body: formData,
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+
+    if (resp.ok) {
+      serverSaved = true;
+    } else {
+      console.error('[Upload] Server responded:', resp.status);
+    }
+  } catch (e) {
+    console.error('[Upload Error]', e);
+  }
+
+  // Feedback
+  isUploading = false;
+  btn.innerHTML = originalText;
+
+  if (serverSaved) {
+    showToast('✨ Foto salva com sucesso! Guarde essa lembrança.');
+  } else if (localSaved) {
+    showToast('📱 Foto salva no dispositivo! (Servidor indisponível)');
+  } else {
+    showToast('⚠️ Erro ao salvar. Tente novamente.');
+  }
+
+  // Reset após delay
+  setTimeout(() => {
+    deletePhoto();
+  }, 1500);
+}
+
+// ═══════════ UI HELPERS ═══════════
+function showScreen(id) {
+  ['welcome-screen', 'camera-screen', 'review-screen', 'error-screen'].forEach(sid => {
+    const el = document.getElementById(sid);
+    if (sid === id) {
+      el.style.display = 'flex';
+      if (sid === 'camera-screen') el.style.display = 'block';
+      if (sid === 'review-screen') el.style.display = 'block';
+    } else {
+      el.style.display = 'none';
+    }
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 4000);
+}
+</script>
+</body>
+</html>
