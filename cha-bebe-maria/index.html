@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>CHÁ DE BEBÊ MARIA — Fotos</title>
+<style>
+:root{--gold:#E8967D;--gold-light:#F0B8A0;--bg:#1A100A;--bg-card:#2A1812;--text:#FDF0EB;--text-muted:#C9A088;--success:#4CAF50;--danger:#E53935;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:Georgia,'Times New Roman',serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;-webkit-tap-highlight-color:transparent;}
+#welcome-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem;text-align:center;background:linear-gradient(135deg,var(--bg) 0%,#1A100A 50%,var(--bg) 100%);}
+.logo-orb{width:120px;height:120px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--gold-light),var(--gold),color-mix(in srgb,var(--gold) 60%,#333));box-shadow:0 0 40px color-mix(in srgb,var(--gold) 40%,transparent);margin-bottom:2rem;animation:pulse 3s ease-in-out infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 40px color-mix(in srgb,var(--gold) 40%,transparent);}50%{box-shadow:0 0 60px color-mix(in srgb,var(--gold) 60%,transparent);}}
+h1{font-size:2rem;font-weight:400;letter-spacing:.15em;color:var(--gold);margin-bottom:.5rem;}
+.subtitle{font-size:.95rem;color:var(--text-muted);margin-bottom:2.5rem;line-height:1.6;max-width:320px;}
+.instructions{background:var(--bg-card);border:1px solid color-mix(in srgb,var(--gold) 20%,transparent);border-radius:16px;padding:1.5rem;margin-bottom:2rem;max-width:340px;width:100%;}
+.instructions p{font-size:.9rem;color:var(--text-muted);line-height:1.7;}
+.btn-primary{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:1rem 2.5rem;font-size:1rem;font-family:inherit;letter-spacing:.08em;color:var(--bg);background:linear-gradient(135deg,var(--gold),var(--gold-light));border:none;border-radius:50px;cursor:pointer;transition:all .3s ease;box-shadow:0 4px 20px color-mix(in srgb,var(--gold) 30%,transparent);-webkit-appearance:none;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 30px color-mix(in srgb,var(--gold) 50%,transparent);}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+#camera-screen{display:none;position:fixed;inset:0;background:#000;z-index:10;}
+#video-container{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+#camera-video{width:100%;height:100%;object-fit:cover;}
+#capture-canvas{display:none;}
+.camera-header{position:absolute;top:0;left:0;right:0;padding:1rem;padding-top:max(1rem,env(safe-area-inset-top));background:linear-gradient(to bottom,rgba(0,0,0,.6),transparent);z-index:20;display:flex;align-items:center;justify-content:space-between;}
+.camera-header span{font-size:.8rem;color:var(--gold);letter-spacing:.1em;}
+.btn-icon{width:44px;height:44px;border-radius:50%;border:1px solid color-mix(in srgb,var(--gold) 40%,transparent);background:rgba(0,0,0,.4);color:var(--gold);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-appearance:none;}
+.camera-footer{position:absolute;bottom:0;left:0;right:0;padding:1.5rem;padding-bottom:max(1.5rem,env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(0,0,0,.7),transparent);z-index:20;display:flex;align-items:center;justify-content:center;gap:2rem;}
+.btn-capture{width:72px;height:72px;border-radius:50%;border:4px solid var(--gold);background:color-mix(in srgb,var(--gold) 15%,transparent);cursor:pointer;position:relative;-webkit-appearance:none;transition:all .2s;}
+.btn-capture::after{content:'';position:absolute;inset:6px;border-radius:50%;background:var(--gold);transition:all .2s;}
+.btn-capture:active::after{background:var(--gold-light);transform:scale(.9);}
+#review-screen{display:none;position:fixed;inset:0;background:#000;z-index:30;}
+#review-canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;}
+.review-footer{position:absolute;bottom:0;left:0;right:0;padding:1.5rem;padding-bottom:max(1.5rem,env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(0,0,0,.8),transparent);z-index:35;display:flex;align-items:center;justify-content:center;gap:1.5rem;}
+.btn-action{padding:.9rem 2rem;font-size:.95rem;font-family:inherit;letter-spacing:.06em;border:none;border-radius:50px;cursor:pointer;-webkit-appearance:none;transition:all .2s;display:flex;align-items:center;gap:.4rem;}
+.btn-delete{background:rgba(229,57,53,.15);color:var(--danger);border:1px solid rgba(229,57,53,.4);}
+.btn-confirm{background:linear-gradient(135deg,var(--success),#66BB6A);color:#fff;box-shadow:0 4px 15px rgba(76,175,80,.3);}
+.toast{position:fixed;top:2rem;left:50%;transform:translateX(-50%) translateY(-100px);background:var(--bg-card);border:1px solid color-mix(in srgb,var(--gold) 30%,transparent);color:var(--text);padding:1rem 1.5rem;border-radius:12px;font-size:.9rem;z-index:100;transition:transform .4s ease;text-align:center;max-width:320px;width:90%;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+#error-screen{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:2rem;text-align:center;}
+.error-icon{font-size:3rem;margin-bottom:1.5rem;}
+.error-text{color:var(--text-muted);line-height:1.7;margin-bottom:2rem;max-width:320px;}
+.spinner{width:40px;height:40px;border:3px solid color-mix(in srgb,var(--gold) 20%,transparent);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;margin:1rem auto;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;align-items:center;justify-content:center;z-index:200;padding:1.5rem;}
+.modal-box{background:var(--bg-card);border:1px solid color-mix(in srgb,var(--gold) 25%,transparent);border-radius:20px;padding:2rem;max-width:360px;width:100%;text-align:center;}
+@keyframes spin{to{transform:rotate(360deg);}}
+@media(max-width:380px){h1{font-size:1.6rem;}.btn-capture{width:64px;height:64px;}}
+</style>
+</head>
+<body>
+<div id="name-modal" style="display:none;">
+  <div class="modal-overlay">
+    <div class="modal-box">
+      <div class="logo-orb" style="width:80px;height:80px;margin-bottom:1.5rem;"></div>
+      <h2 style="color:var(--gold);font-size:1.4rem;margin-bottom:.5rem;">Qual seu nome?</h2>
+      <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:1.5rem;line-height:1.5;">Para organizar as fotos da CHÁ DE BEBÊ MARIA, nos diga seu nome.</p>
+      <input type="text" id="guest-name" placeholder="Seu nome ou apelido" maxlength="60" autocomplete="off" style="width:100%;padding:.9rem 1.2rem;font-size:1rem;font-family:inherit;background:var(--bg-card);border:1px solid color-mix(in srgb,var(--gold) 30%,transparent);border-radius:12px;color:var(--text);outline:none;margin-bottom:1rem;text-align:center;">
+      <button class="btn-primary" style="width:100%;" onclick="confirmName()">Confirmar e Abrir Câmera</button>
+    </div>
+  </div>
+</div>
+<div id="welcome-screen">
+  <div class="logo-orb"></div>
+  <h1>CHÁ DE BEBÊ MARIA</h1>
+  <p class="subtitle">Chegou a princesinha!</p>
+  <div class="instructions"><p>Bem-vindo ao sistema de fotos!<br><br>Para registrar os melhores momentos, clique no botão abaixo para liberar o acesso seguro à sua câmera.</p></div>
+  <button class="btn-primary" id="btn-start" onclick="showNameModal()">📷 Permitir Câmera e Tirar Foto</button>
+</div>
+<div id="camera-screen">
+  <div id="video-container"><video id="camera-video" autoplay playsinline muted></video></div>
+  <div class="camera-header"><span>CHÁ DE BEBÊ MARIA</span><button class="btn-icon" onclick="flipCamera()" title="Trocar câmera">🔄</button></div>
+  <div class="camera-footer"><button class="btn-capture" onclick="capturePhoto()" title="Capturar"></button></div>
+</div>
+<div id="review-screen">
+  <canvas id="review-canvas"></canvas>
+  <div class="review-footer">
+    <button class="btn-action btn-delete" onclick="deletePhoto()">🗑 Apagar</button>
+    <button class="btn-action btn-confirm" onclick="confirmPhoto()">✓ Ficou Boa</button>
+  </div>
+</div>
+<div id="error-screen">
+  <div class="error-icon">📵</div>
+  <h2 style="color:var(--gold);margin-bottom:1rem;">Câmera Bloqueada</h2>
+  <p class="error-text" id="error-text">Você precisa liberar a permissão de câmera do seu navegador para participar.<br><br>Por favor, atualize a página e clique em "Permitir".</p>
+  <button class="btn-primary" onclick="location.reload()">🔄 Tentar Novamente</button>
+</div>
+<div class="toast" id="toast"></div>
+<canvas id="capture-canvas" style="display:none;"></canvas>
+<script>
+const EVENT_ID="cha-bebe-maria";
+const API_URL="https://qrfotos.duckdns.org/upload/"+EVENT_ID;
+let currentStream=null,useFrontCamera=false,isUploading=false,guestName="";
+
+function showNameModal(){document.getElementById("name-modal").style.display="block";setTimeout(()=>document.getElementById("guest-name").focus(),300);}
+function confirmName(){guestName=document.getElementById("guest-name").value.trim()||"Anônimo";document.getElementById("name-modal").style.display="none";startCamera();}
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&document.getElementById("name-modal").style.display!=="none")confirmName();});
+
+const video=document.getElementById("camera-video"),captureCanvas=document.getElementById("capture-canvas"),reviewCanvas=document.getElementById("review-canvas");
+const captureCtx=captureCanvas.getContext("2d"),reviewCtx=reviewCanvas.getContext("2d");
+
+async function startCamera(){
+  const b=document.getElementById("btn-start");b.disabled=true;b.innerHTML='<div class="spinner" style="width:24px;height:24px;border-width:2px;margin:0"></div> Carregando...';
+  try{await attachStream(await getCameraStream(false));showScreen("camera-screen");}
+  catch(err){
+    b.disabled=false;b.innerHTML="📷 Permitir Câmera e Tirar Foto";
+    if(err.name==="NotAllowedError"||err.name==="PermissionDeniedError"){showScreen("error-screen");}
+    else{try{await attachStream(await navigator.mediaDevices.getUserMedia({video:true}));showScreen("camera-screen");}catch(e2){document.getElementById("error-text").textContent="Não foi possível acessar a câmera.";showScreen("error-screen");}}
+  }
+}
+
+async function getCameraStream(front){
+  const C=front?[{video:{facingMode:{exact:"user"}}},{video:{facingMode:"user"}},{video:true}]:[{video:{facingMode:{exact:"environment"}}},{video:{facingMode:"environment"}},{video:true}];
+  let last;
+  for(const c of C){try{return await navigator.mediaDevices.getUserMedia(c);}catch(e){last=e;if(e.name==="NotAllowedError")throw e;}}
+  throw last;
+}
+
+async function attachStream(s){
+  if(currentStream)currentStream.getTracks().forEach(t=>t.stop());
+  currentStream=s;video.srcObject=s;
+  return new Promise(r=>{video.onloadedmetadata=()=>video.play().then(r).catch(r);setTimeout(r,2000);});
+}
+
+async function flipCamera(){
+  useFrontCamera=!useFrontCamera;
+  try{await attachStream(await getCameraStream(useFrontCamera));}
+  catch(e){useFrontCamera=!useFrontCamera;showToast("Não foi possível trocar a câmera.");}
+}
+
+function capturePhoto(){
+  if(!currentStream)return;
+  let w=video.videoWidth||1280,h=video.videoHeight||720;
+  const M=1920;
+  if(w>M||h>M){if(w>=h){h=Math.round(h*M/w);w=M;}else{w=Math.round(w*M/h);h=M;}}
+  captureCanvas.width=w;captureCanvas.height=h;captureCtx.drawImage(video,0,0,w,h);
+  reviewCanvas.width=w;reviewCanvas.height=h;reviewCtx.drawImage(captureCanvas,0,0);
+  showScreen("review-screen");
+}
+
+function deletePhoto(){captureCtx.clearRect(0,0,captureCanvas.width,captureCanvas.height);reviewCtx.clearRect(0,0,reviewCanvas.width,reviewCanvas.height);showScreen("camera-screen");}
+
+async function confirmPhoto(){
+  if(isUploading)return;isUploading=true;
+  const btn=document.querySelector(".btn-confirm"),orig=btn.innerHTML;
+  btn.innerHTML='<div class="spinner" style="width:20px;height:20px;border-width:2px;margin:0"></div> Salvando...';
+  let localSaved=false;
+  try{
+    const du=captureCanvas.toDataURL("image/jpeg",0.90);
+    const a=document.createElement("a");a.href=du;a.download="FESTA_DO_JOÃO_"+Date.now()+".jpg";
+    document.body.appendChild(a);a.click();document.body.removeChild(a);localSaved=true;
+  }catch(e){}
+  let serverSaved=false;
+  try{
+    const blob=await new Promise((res,rej)=>captureCanvas.toBlob(b=>b?res(b):rej(new Error("toBlob failed")),"image/jpeg",0.85));
+    const fd=new FormData();fd.append("image",blob,"capture.jpg");fd.append("nome",guestName);
+    const ctrl=new AbortController();const t=setTimeout(()=>ctrl.abort(),15000);
+    const r=await fetch(API_URL,{method:"POST",body:fd,signal:ctrl.signal});clearTimeout(t);
+    if(r.ok)serverSaved=true;
+  }catch(e){}
+  isUploading=false;btn.innerHTML=orig;
+  if(serverSaved)showToast("✨ Foto salva com sucesso! Guarde essa lembrança.");
+  else if(localSaved)showToast("📱 Foto salva no dispositivo! (Servidor indisponível)");
+  else showToast("⚠️ Erro ao salvar. Tente novamente.");
+  setTimeout(()=>deletePhoto(),1500);
+}
+
+function showScreen(id){["welcome-screen","camera-screen","review-screen","error-screen"].forEach(s=>{const el=document.getElementById(s);el.style.display=(s===id)?((s==="camera-screen"||s==="review-screen")?"block":"flex"):"none";});}
+function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),4000);}
+</script>
+</body>
+</html>
