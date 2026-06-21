@@ -74,35 +74,6 @@ body {
   color: var(--gold);
 }
 
-/* ── Download all button ── */
-.btn-download-all {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.6rem 1.2rem;
-  font-size: 0.8rem;
-  font-family: inherit;
-  letter-spacing: 0.04em;
-  color: var(--bg);
-  background: linear-gradient(135deg, var(--gold), var(--gold-light));
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.2s;
-  -webkit-appearance: none;
-}
-
-.btn-download-all:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 15px rgba(201, 168, 76, 0.3);
-}
-
-.btn-download-all:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
 /* ── Groups ── */
 .groups-container {
   padding: 1rem;
@@ -145,61 +116,29 @@ body {
   margin-top: 0.2rem;
 }
 
-.group-actions {
-  display: flex;
-  gap: 0.5rem;
-  flex-shrink: 0;
-  margin-left: 1rem;
-}
-
-.btn-sm {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  padding: 0.45rem 0.9rem;
-  font-size: 0.72rem;
-  font-family: inherit;
-  letter-spacing: 0.03em;
-  border: none;
-  border-radius: 50px;
-  cursor: pointer;
-  transition: all 0.2s;
-  -webkit-appearance: none;
-  white-space: nowrap;
-}
-
-.btn-download {
-  background: rgba(66, 165, 245, 0.15);
-  color: var(--info);
-  border: 1px solid rgba(66, 165, 245, 0.3);
-}
-
-.btn-download:hover {
-  background: rgba(66, 165, 245, 0.25);
-}
-
-.btn-toggle {
-  background: rgba(201, 168, 76, 0.12);
-  color: var(--gold);
-  border: 1px solid rgba(201, 168, 76, 0.25);
+.group-toggle {
   width: 36px;
   height: 36px;
-  padding: 0;
-  justify-content: center;
   border-radius: 50%;
-}
-
-.btn-toggle:hover {
-  background: rgba(201, 168, 76, 0.2);
+  border: 1px solid rgba(201, 168, 76, 0.25);
+  background: rgba(201, 168, 76, 0.12);
+  color: var(--gold);
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: 1rem;
+  -webkit-appearance: none;
 }
 
 /* ── Photos grid ── */
 .photos-grid {
-  display: grid;
+  display: none;
   grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 0.6rem;
   padding: 1rem;
-  display: none;
 }
 
 .photos-grid.open {
@@ -242,23 +181,25 @@ body {
 }
 
 .btn-download-one {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  border: 1px solid rgba(201, 168, 76, 0.4);
-  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(201, 168, 76, 0.5);
+  background: rgba(0,0,0,0.6);
   color: var(--gold);
-  font-size: 0.7rem;
+  font-size: 0.85rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   -webkit-appearance: none;
   flex-shrink: 0;
+  transition: all 0.15s;
 }
 
 .btn-download-one:hover {
-  background: rgba(201, 168, 76, 0.2);
+  background: rgba(201, 168, 76, 0.25);
+  transform: scale(1.1);
 }
 
 /* ── Loading / Empty ── */
@@ -318,16 +259,8 @@ body {
     gap: 0.4rem;
     padding: 0.6rem;
   }
-  .group-header {
-    padding: 0.8rem;
-  }
-  .group-name {
-    font-size: 0.95rem;
-  }
-  .btn-sm {
-    padding: 0.35rem 0.7rem;
-    font-size: 0.65rem;
-  }
+  .group-header { padding: 0.8rem; }
+  .group-name { font-size: 0.95rem; }
 }
 </style>
 </head>
@@ -340,9 +273,6 @@ body {
 
 <div class="stats-bar">
   <span class="stat" id="stat-total">Carregando...</span>
-  <button class="btn-download-all" id="btn-dl-all" onclick="downloadAll()" disabled>
-    📥 Baixar Todas
-  </button>
 </div>
 
 <div class="groups-container" id="groups-container">
@@ -357,7 +287,6 @@ body {
 <script>
 const API_BASE = 'https://qrfotos.duckdns.org';
 
-// ── Load photos ──
 async function loadPhotos() {
   const container = document.getElementById('groups-container');
   try {
@@ -375,13 +304,10 @@ async function loadPhotos() {
       return;
     }
 
-    // Stats
     const sizeMB = (data.totalSize / 1048576).toFixed(1);
     document.getElementById('stat-total').innerHTML =
       `<strong>${data.totalPhotos}</strong> fotos · <strong>${sizeMB}</strong> MB · <strong>${Object.keys(data.groups).length}</strong> grupos`;
-    document.getElementById('btn-dl-all').disabled = false;
 
-    // Render groups
     let html = '';
     for (const [nome, group] of Object.entries(data.groups)) {
       const groupId = nome.replace(/[^a-zA-Z0-9]/g, '_');
@@ -397,12 +323,7 @@ async function loadPhotos() {
               <div class="group-name">👤 ${escapeHtml(nome)}</div>
               <div class="group-meta">${group.count} foto${group.count>1?'s':''} · ${groupSizeMB} MB · ${firstTime}</div>
             </div>
-            <div class="group-actions">
-              <button class="btn-sm btn-download" onclick="event.stopPropagation(); downloadGroup('${escapeHtml(nome)}')">
-                📥 ZIP
-              </button>
-              <button class="btn-sm btn-toggle" id="btn-${groupId}">▼</button>
-            </div>
+            <button class="group-toggle" id="btn-${groupId}">▼</button>
           </div>
           <div class="photos-grid open" id="grid-${groupId}">`;
 
@@ -416,7 +337,7 @@ async function loadPhotos() {
                  onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%232A1018%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2255%22 text-anchor=%22middle%22 fill=%22%23A08090%22 font-size=%2214%22>📷</text></svg>'">
             <div class="photo-overlay">
               <span class="photo-time">${time}</span>
-              <button class="btn-download-one" onclick="downloadOne('${photo.filename}')" title="Baixar">⬇</button>
+              <button class="btn-download-one" onclick="downloadOne('${photo.filename}')" title="Baixar foto">⬇</button>
             </div>
           </div>`;
       }
@@ -431,13 +352,12 @@ async function loadPhotos() {
       <div class="empty-state">
         <div class="icon">⚠️</div>
         <p>Erro ao carregar fotos.<br>Verifique se o servidor está online.</p>
-        <button class="btn-sm btn-download" onclick="loadPhotos()" style="margin-top:1rem;">🔄 Tentar</button>
+        <button class="group-toggle" onclick="loadPhotos()" style="margin-top:1rem;padding:0.5rem 1rem;">🔄 Tentar</button>
       </div>`;
     document.getElementById('stat-total').textContent = 'Erro';
   }
 }
 
-// ── Toggle group ──
 function toggleGroup(id) {
   const grid = document.getElementById(`grid-${id}`);
   const btn = document.getElementById(`btn-${id}`);
@@ -450,23 +370,11 @@ function toggleGroup(id) {
   }
 }
 
-// ── Downloads ──
 function downloadOne(filename) {
   window.open(`${API_BASE}/download/${filename}`, '_blank');
   showToast('⬇️ Download iniciado');
 }
 
-function downloadGroup(nome) {
-  window.open(`${API_BASE}/download-group/${encodeURIComponent(nome)}`, '_blank');
-  showToast(`📥 ZIP de ${escapeHtml(nome)} iniciado`);
-}
-
-function downloadAll() {
-  window.open(`${API_BASE}/download-all`, '_blank');
-  showToast('📥 ZIP completo iniciado');
-}
-
-// ── Helpers ──
 function escapeHtml(s) {
   const d = document.createElement('div');
   d.textContent = s;
@@ -480,10 +388,7 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 3000);
 }
 
-// ── Init ──
 loadPhotos();
-
-// Auto-refresh a cada 30s
 setInterval(loadPhotos, 30000);
 </script>
 </body>
