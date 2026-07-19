@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>GIORGIA 15 ANOS — Fotos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #FF4FA3;
+  --accent-light: #FF9CCB;
+  --accent-glow: rgba(255, 79, 163, 0.25);
+  --bg: #071A33;
+  --bg-card: #0C2A4A;
+  --bg-card2: #12395F;
+  --text: #F5F8FF;
+  --text-bright: #FFFFFF;
+  --text-muted: #AFCBE8;
+  --success: #4CAF50;
+  --danger: #E53935;
+  --border: rgba(255, 79, 163, 0.18);
+  --border-bright: rgba(255, 79, 163, 0.35);
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Welcome Screen ── */
+#welcome-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  position: relative;
+}
+
+/* Subtle radial glow behind the monogram */
+#welcome-screen::before {
+  content: '';
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Monogram ── */
+.monogram {
+  position: relative;
+  z-index: 1;
+  width: 140px;
+  height: 140px;
+  margin-bottom: 2.5rem;
+  animation: fadeDown 0.8s ease-out both;
+}
+.monogram-ring {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--border-bright);
+  border-radius: 50%;
+}
+.monogram-ring::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+}
+.monogram-letter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 3.8rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--accent-light);
+  letter-spacing: 0;
+  line-height: 1;
+}
+.monogram-crown {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.85rem;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* ── Title ── */
+.event-title {
+  position: relative;
+  z-index: 1;
+  animation: fadeDown 0.8s ease-out 0.15s both;
+}
+.event-title h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.2rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--text-bright);
+  text-transform: uppercase;
+  line-height: 1.2;
+  margin-bottom: 0.4rem;
+}
+.event-title .divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  margin: 0.8rem auto;
+}
+.event-title .subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 300;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ── Instructions card ── */
+.instructions {
+  position: relative;
+  z-index: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem 1.25rem;
+  margin: 2rem 0;
+  max-width: 340px;
+  width: 100%;
+  animation: fadeDown 0.8s ease-out 0.3s both;
+}
+.instructions p {
+  font-size: 0.875rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+.instructions .step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  text-align: left;
+  margin-bottom: 0.75rem;
+}
+.instructions .step:last-child { margin-bottom: 0; }
+.step-icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border-bright);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: var(--accent);
+  margin-top: 1px;
+}
+.step-text {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+/* ── CTA Button ── */
+.btn-primary {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1rem 2.5rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 24px var(--accent-glow);
+  -webkit-appearance: none;
+  animation: fadeDown 0.8s ease-out 0.45s both;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px var(--accent-glow);
+}
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn-primary .btn-icon { font-size: 1.1rem; }
+
+/* ── Camera Screen ── */
+#camera-screen { display: none; position: fixed; inset: 0; background: #000; z-index: 10; }
+#video-container { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+#camera-video { width: 100%; height: 100%; object-fit: cover; }
+#capture-canvas { display: none; }
+
+.camera-header {
+  position: absolute; top: 0; left: 0; right: 0;
+  padding: 1rem; padding-top: max(1rem, env(safe-area-inset-top));
+  background: linear-gradient(to bottom, rgba(0,0,0,.6), transparent);
+  z-index: 20;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.camera-header span {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem; font-weight: 500;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent-light);
+}
+.btn-icon {
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid rgba(255, 156, 203, 0.45);
+  background: rgba(0,0,0,.4);
+  color: var(--accent-light);
+  font-size: 1.2rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  -webkit-appearance: none;
+}
+
+.camera-footer {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 1.5rem; padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  background: linear-gradient(to top, rgba(0,0,0,.7), transparent);
+  z-index: 20;
+  display: flex; align-items: center; justify-content: center; gap: 2rem;
+}
+.btn-capture {
+  width: 72px; height: 72px; border-radius: 50%;
+  border: 3px solid var(--accent);
+  background: rgba(255, 79, 163, 0.14);
+  cursor: pointer; position: relative;
+  -webkit-appearance: none; transition: all 0.2s;
+}
+.btn-capture::after {
+  content: ''; position: absolute; inset: 6px; border-radius: 50%;
+  background: var(--accent); transition: all 0.2s;
+}
+.btn-capture:active::after { background: var(--accent-light); transform: scale(.9); }
+
+/* ── Review Screen ── */
+#review-screen { display: none; position: fixed; inset: 0; background: #000; z-index: 30; }
+#review-canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.review-footer {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 1.5rem; padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  background: linear-gradient(to top, rgba(0,0,0,.8), transparent);
+  z-index: 35;
+  display: flex; align-items: center; justify-content: center; gap: 1.5rem;
+}
+.btn-action {
+  padding: .9rem 2rem; font-size: .9rem;
+  font-family: 'Inter', sans-serif; font-weight: 500;
+  letter-spacing: .06em; border: none; border-radius: 50px;
+  cursor: pointer; -webkit-appearance: none; transition: all .2s;
+  display: flex; align-items: center; gap: .4rem;
+}
+.btn-delete { background: rgba(229,57,53,.15); color: var(--danger); border: 1px solid rgba(229,57,53,.4); }
+.btn-confirm { background: linear-gradient(135deg, var(--success), #66BB6A); color: #fff; box-shadow: 0 4px 15px rgba(76,175,80,.3); }
+
+/* ── Toast ── */
+.toast {
+  position: fixed; top: 2rem; left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  background: var(--bg-card); border: 1px solid var(--border-bright);
+  color: var(--text); padding: 1rem 1.5rem; border-radius: 12px;
+  font-size: 0.875rem; font-weight: 300;
+  z-index: 100; transition: transform .4s ease;
+  text-align: center; max-width: 320px; width: 90%;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── Error Screen ── */
+#error-screen { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; text-align: center; }
+.error-icon { font-size: 3rem; margin-bottom: 1.5rem; }
+.error-text { color: var(--text-muted); line-height: 1.7; margin-bottom: 2rem; max-width: 320px; font-weight: 300; }
+
+/* ── Name Modal ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(13, 27, 42, 0.92);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200; padding: 1.5rem;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+.modal-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px; padding: 2.5rem 2rem;
+  max-width: 360px; width: 100%; text-align: center;
+}
+.modal-box .modal-monogram {
+  width: 64px; height: 64px; margin: 0 auto 1.5rem;
+  border: 1px solid var(--border-bright); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2rem; font-style: italic; color: var(--accent-light);
+}
+.modal-box h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.3rem; font-weight: 400;
+  color: var(--text-bright); margin-bottom: .5rem;
+}
+.modal-box p {
+  color: var(--text-muted); font-size: 0.85rem; font-weight: 300;
+  margin-bottom: 1.5rem; line-height: 1.6;
+}
+.modal-box input[type="text"] {
+  width: 100%; padding: .9rem 1.2rem;
+  font-family: 'Inter', sans-serif; font-size: 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px; color: var(--text-bright);
+  outline: none; margin-bottom: 1rem; text-align: center;
+  transition: border-color .2s;
+}
+.modal-box input[type="text"]:focus { border-color: var(--accent); }
+.modal-box input[type="text"]::placeholder { color: var(--text-muted); }
+
+/* ── Spinner ── */
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid rgba(74, 144, 217, 0.2);
+  border-top-color: var(--accent);
+  border-radius: 50%; animation: spin .8s linear infinite;
+  margin: 1rem auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Animations ── */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 380px) {
+  .event-title h1 { font-size: 1.8rem; }
+  .monogram { width: 120px; height: 120px; }
+  .monogram-letter { font-size: 3.2rem; }
+  .btn-capture { width: 64px; height: 64px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- Name Modal -->
+<div id="name-modal" style="display:none;">
+  <div class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-monogram">G</div>
+      <h2>Como você se chama?</h2>
+      <p>Suas fotos serão organizadas com seu nome na galeria do evento.</p>
+      <input type="text" id="guest-name" placeholder="Seu nome ou apelido" maxlength="60" autocomplete="off">
+      <button class="btn-primary" style="width:100%;" onclick="confirmName()">Confirmar e Abrir Câmera</button>
+    </div>
+  </div>
+</div>
+
+<!-- Welcome Screen -->
+<div id="welcome-screen">
+  <div class="monogram">
+    <div class="monogram-ring"></div>
+    <div class="monogram-letter">G</div>
+  </div>
+  <div class="event-title">
+    <h1>GIORGIA 15 ANOS</h1>
+    <div class="divider"></div>
+    <p class="subtitle">Meus 15 Anos</p>
+  </div>
+  <div class="instructions">
+    <div class="step">
+      <div class="step-icon">1</div>
+      <div class="step-text">Toque no botão abaixo e permita o acesso à câmera</div>
+    </div>
+    <div class="step">
+      <div class="step-icon">2</div>
+      <div class="step-text">Tire seus fotos — elas são salvas no seu celular e na galeria</div>
+    </div>
+    <div class="step">
+      <div class="step-icon">3</div>
+      <div class="step-text">Revise cada foto antes de confirmar</div>
+    </div>
+  </div>
+  <button class="btn-primary" id="btn-start" onclick="showNameModal()">
+    <span class="btn-icon">📷</span> Tirar Foto
+  </button>
+</div>
+
+<!-- Camera Screen -->
+<div id="camera-screen">
+  <div id="video-container"><video id="camera-video" autoplay playsinline muted></video></div>
+  <div class="camera-header">
+    <span>GIORGIA 15 ANOS</span>
+    <button class="btn-icon" onclick="flipCamera()" title="Trocar câmera">🔄</button>
+  </div>
+  <div class="camera-footer">
+    <button class="btn-capture" onclick="capturePhoto()" title="Capturar"></button>
+  </div>
+</div>
+
+<!-- Review Screen -->
+<div id="review-screen">
+  <canvas id="review-canvas"></canvas>
+  <div class="review-footer">
+    <button class="btn-action btn-delete" onclick="deletePhoto()">🗑 Apagar</button>
+    <button class="btn-action btn-confirm" onclick="confirmPhoto()">✓ Ficou Boa</button>
+  </div>
+</div>
+
+<!-- Error Screen -->
+<div id="error-screen">
+  <div class="error-icon">📵</div>
+  <h2 style="font-family:'Playfair Display',serif;color:var(--text-bright);margin-bottom:1rem;">Câmera Bloqueada</h2>
+  <p class="error-text" id="error-text">Você precisa liberar a permissão de câmera do seu navegador para participar.<br><br>Por favor, atualize a página e clique em "Permitir".</p>
+  <button class="btn-primary" onclick="location.reload()">🔄 Tentar Novamente</button>
+</div>
+
+<div class="toast" id="toast"></div>
+<canvas id="capture-canvas" style="display:none;"></canvas>
+
+<script>
+const EVENT_ID = "giorgia-15-anos";
+const API_URL = "https://qrfotos.duckdns.org/upload/" + EVENT_ID;
+let currentStream = null, useFrontCamera = false, isUploading = false, guestName = "";
+
+function showNameModal() {
+  document.getElementById("name-modal").style.display = "block";
+  setTimeout(() => document.getElementById("guest-name").focus(), 300);
+}
+function confirmName() {
+  guestName = document.getElementById("guest-name").value.trim() || "Anônimo";
+  document.getElementById("name-modal").style.display = "none";
+  startCamera();
+}
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter" && document.getElementById("name-modal").style.display !== "none") confirmName();
+});
+
+const video = document.getElementById("camera-video"),
+      captureCanvas = document.getElementById("capture-canvas"),
+      reviewCanvas = document.getElementById("review-canvas");
+const captureCtx = captureCanvas.getContext("2d"),
+      reviewCtx = reviewCanvas.getContext("2d");
+
+async function startCamera() {
+  const b = document.getElementById("btn-start");
+  b.disabled = true;
+  b.innerHTML = '<div class="spinner" style="width:24px;height:24px;border-width:2px;margin:0;display:inline-block;vertical-align:middle;"></div> Carregando...';
+  try {
+    await attachStream(await getCameraStream(false));
+    showScreen("camera-screen");
+  } catch (err) {
+    b.disabled = false;
+    b.innerHTML = '<span class="btn-icon">📷</span> Tirar Foto';
+    if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
+      showScreen("error-screen");
+    } else {
+      try {
+        await attachStream(await navigator.mediaDevices.getUserMedia({ video: true }));
+        showScreen("camera-screen");
+      } catch (e2) {
+        document.getElementById("error-text").textContent = "Não foi possível acessar a câmera.";
+        showScreen("error-screen");
+      }
+    }
+  }
+}
+
+async function getCameraStream(front) {
+  const C = front
+    ? [{ video: { facingMode: { exact: "user" } } }, { video: { facingMode: "user" } }, { video: true }]
+    : [{ video: { facingMode: { exact: "environment" } } }, { video: { facingMode: "environment" } }, { video: true }];
+  let last;
+  for (const c of C) {
+    try { return await navigator.mediaDevices.getUserMedia(c); }
+    catch (e) { last = e; if (e.name === "NotAllowedError") throw e; }
+  }
+  throw last;
+}
+
+async function attachStream(s) {
+  if (currentStream) currentStream.getTracks().forEach(t => t.stop());
+  currentStream = s;
+  video.srcObject = s;
+  return new Promise(r => {
+    video.onloadedmetadata = () => video.play().then(r).catch(r);
+    setTimeout(r, 2000);
+  });
+}
+
+async function flipCamera() {
+  useFrontCamera = !useFrontCamera;
+  try { await attachStream(await getCameraStream(useFrontCamera)); }
+  catch (e) { useFrontCamera = !useFrontCamera; showToast("Não foi possível trocar a câmera."); }
+}
+
+function capturePhoto() {
+  if (!currentStream) return;
+  let w = video.videoWidth || 1280, h = video.videoHeight || 720;
+  const M = 1920;
+  if (w > M || h > M) { if (w >= h) { h = Math.round(h * M / w); w = M; } else { w = Math.round(w * M / h); h = M; } }
+  captureCanvas.width = w; captureCanvas.height = h;
+  captureCtx.drawImage(video, 0, 0, w, h);
+  reviewCanvas.width = w; reviewCanvas.height = h;
+  reviewCtx.drawImage(captureCanvas, 0, 0);
+  showScreen("review-screen");
+}
+
+function deletePhoto() {
+  captureCtx.clearRect(0, 0, captureCanvas.width, captureCanvas.height);
+  reviewCtx.clearRect(0, 0, reviewCanvas.width, reviewCanvas.height);
+  showScreen("camera-screen");
+}
+
+async function confirmPhoto() {
+  if (isUploading) return;
+  isUploading = true;
+  const btn = document.querySelector(".btn-confirm"), orig = btn.innerHTML;
+  btn.innerHTML = '<div class="spinner" style="width:20px;height:20px;border-width:2px;margin:0;display:inline-block;vertical-align:middle;"></div> Salvando...';
+  let localSaved = false;
+  try {
+    const du = captureCanvas.toDataURL("image/jpeg", 0.90);
+    const a = document.createElement("a");
+    a.href = du; a.download = "XV_GIOVANA_" + Date.now() + ".jpg";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    localSaved = true;
+  } catch (e) {}
+  let serverSaved = false;
+  try {
+    const blob = await new Promise((res, rej) => captureCanvas.toBlob(b => b ? res(b) : rej(new Error("toBlob failed")), "image/jpeg", 0.85));
+    const fd = new FormData();
+    fd.append("image", blob, "capture.jpg");
+    fd.append("nome", guestName);
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 15000);
+    const r = await fetch(API_URL, { method: "POST", body: fd, signal: ctrl.signal });
+    clearTimeout(t);
+    if (r.ok) serverSaved = true;
+  } catch (e) {}
+  isUploading = false;
+  btn.innerHTML = orig;
+  if (serverSaved) showToast("✨ Foto salva com sucesso!");
+  else if (localSaved) showToast("📱 Foto salva no dispositivo!");
+  else showToast("⚠️ Erro ao salvar. Tente novamente.");
+  setTimeout(() => deletePhoto(), 1500);
+}
+
+function showScreen(id) {
+  ["welcome-screen", "camera-screen", "review-screen", "error-screen"].forEach(s => {
+    const el = document.getElementById(s);
+    el.style.display = (s === id)
+      ? ((s === "camera-screen" || s === "review-screen") ? "block" : "flex")
+      : "none";
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 4000);
+}
+</script>
+</body>
+</html>
