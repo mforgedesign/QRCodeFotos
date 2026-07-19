@@ -559,7 +559,7 @@ async function confirmPhoto() {
   try {
     const du = captureCanvas.toDataURL("image/jpeg", 0.90);
     const a = document.createElement("a");
-    a.href = du; a.download = "XV_GIOVANA_" + Date.now() + ".jpg";
+    a.href = du; a.download = EVENT_ID.toUpperCase().replace(/-/g, "_") + "_" + Date.now() + ".jpg";
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     localSaved = true;
   } catch (e) {}
