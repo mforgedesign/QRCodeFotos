@@ -1,3 +1,4 @@
+import os
 import re
 import subprocess
 import tempfile
@@ -5,7 +6,12 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-TEMPLATE = Path('/root/.hermes/workspace/templates/fotoqr-factory/template-index.html')
+TEMPLATE = Path(
+    os.environ.get(
+        'FOTOQR_TEMPLATE',
+        '/root/.hermes/workspace/templates/fotoqr-factory/template-index.html',
+    )
+)
 PAGES = {
     ROOT / 'index.html': None,
     ROOT / 'anna-carolina-15-anos/index.html': 'anna-carolina-15-anos',
@@ -13,8 +19,9 @@ PAGES = {
     ROOT / 'xv-giovana/index.html': 'xv-giovana',
     ROOT / 'casamento-ana-pedro/index.html': 'casamento-ana-pedro',
     ROOT / 'festa-joao/index.html': 'festa-joao',
-    TEMPLATE: 'xv-giovana',
 }
+if TEMPLATE.exists():
+    PAGES[TEMPLATE] = 'xv-giovana'
 
 
 class DeviceUploadContract(unittest.TestCase):
@@ -35,15 +42,24 @@ class DeviceUploadContract(unittest.TestCase):
                 html = path.read_text(encoding='utf-8')
                 for token in (
                     'const MAX_FILE_BYTES = 10 * 1024 * 1024;',
+                    'const MAX_BATCH_FILES = 20;',
+                    'const MAX_SOURCE_PIXELS = 60_000_000;',
+                    'const DECODE_TIMEOUT_MS = 15000;',
+                    'async function inspectImageDimensions(file)',
                     'async function normalizeImageFile(file)',
                     'async function uploadImageBlob(blob, filename = "capture.jpg")',
                     'async function processSelectedFiles(files)',
-                    'for (const file of files)',
+                    'for (const [index, file] of files.entries())',
                     'file.type.startsWith("image/")',
                     'file.size > MAX_FILE_BYTES',
-                    'await uploadImageBlob(blob,',
+                    'index >= MAX_BATCH_FILES',
+                    'await uploadImageBlob(blob, makeNeutralFilename(index))',
+                    'finally {\n    isUploading = false;',
+                    'renderUploadFailures(failures)',
+                    'upload-failure-list',
                 ):
                     self.assertIn(token, html, token)
+                self.assertNotIn('`${safeBaseName}.jpg`', html)
 
     def test_event_ids_and_upload_endpoints_are_unchanged(self):
         expected_api_expressions = {
@@ -53,8 +69,9 @@ class DeviceUploadContract(unittest.TestCase):
             ROOT / 'xv-giovana/index.html': '"https://qrfotos.duckdns.org/upload/"+EVENT_ID',
             ROOT / 'casamento-ana-pedro/index.html': '"https://qrfotos.duckdns.org/upload/"+EVENT_ID',
             ROOT / 'festa-joao/index.html': '"https://qrfotos.duckdns.org/upload/"+EVENT_ID',
-            TEMPLATE: '"https://qrfotos.duckdns.org/upload/"+EVENT_ID',
         }
+        if TEMPLATE.exists():
+            expected_api_expressions[TEMPLATE] = '"https://qrfotos.duckdns.org/upload/"+EVENT_ID'
         for path, event_id in PAGES.items():
             with self.subTest(path=path):
                 html = path.read_text(encoding='utf-8')

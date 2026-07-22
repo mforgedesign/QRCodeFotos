@@ -445,6 +445,22 @@ body {
   background: var(--accent, var(--gold));
   transition: width 0.25s ease;
 }
+.upload-failure-list {
+  max-height: 180px;
+  margin: 1rem 0 0;
+  padding-left: 1.25rem;
+  overflow-y: auto;
+  text-align: left;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+.upload-failure-list[hidden] { display: none; }
+#upload-status-close {
+  width: 100%;
+  margin-top: 1rem;
+}
+#upload-status-close[hidden] { display: none; }
 
 </style>
 </head>
@@ -530,6 +546,8 @@ body {
     <strong id="upload-status-title">Enviando fotos</strong>
     <span id="upload-status-text">Preparando...</span>
     <div class="upload-progress"><div id="upload-progress-fill" class="upload-progress-fill"></div></div>
+    <ul id="upload-failure-list" class="upload-failure-list" hidden></ul>
+    <button type="button" id="upload-status-close" class="btn-secondary" onclick="closeUploadStatus()" hidden>Fechar</button>
   </div>
 </div>
 
@@ -682,7 +700,11 @@ function showToast(msg) {
 
 // ═══════════ DEVICE IMAGE PIPELINE ═══════════
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
+const MAX_BATCH_FILES = 20;
+const MAX_SOURCE_PIXELS = 60_000_000;
 const MAX_IMAGE_DIMENSION = 1920;
+const DECODE_TIMEOUT_MS = 15000;
+const HEADER_READ_BYTES = 512 * 1024;
 
 function canvasToBlob(canvas, type = "image/jpeg", quality = 0.85) {
   return new Promise((resolve, reject) => {
@@ -690,20 +712,152 @@ function canvasToBlob(canvas, type = "image/jpeg", quality = 0.85) {
   });
 }
 
+function readAscii(view, offset, length) {
+  let value = "";
+  for (let i = 0; i < length && offset + i < view.byteLength; i += 1) {
+    value += String.fromCharCode(view.getUint8(offset + i));
+  }
+  return value;
+}
+
+function readUint24LE(view, offset) {
+  return view.getUint8(offset) | (view.getUint8(offset + 1) << 8) | (view.getUint8(offset + 2) << 16);
+}
+
+async function inspectImageDimensions(file) {
+  const buffer = await file.slice(0, HEADER_READ_BYTES).arrayBuffer();
+  const view = new DataView(buffer);
+  if (view.byteLength < 10) return null;
+
+  if (view.byteLength >= 24 && view.getUint32(0, false) === 0x89504e47 && view.getUint32(4, false) === 0x0d0a1a0a) {
+    return { width: view.getUint32(16, false), height: view.getUint32(20, false), format: "PNG" };
+  }
+
+  const signature = readAscii(view, 0, 6);
+  if (signature === "GIF87a" || signature === "GIF89a") {
+    return { width: view.getUint16(6, true), height: view.getUint16(8, true), format: "GIF" };
+  }
+
+  if (view.getUint16(0, false) === 0xffd8) {
+    const sofMarkers = new Set([0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce, 0xcf]);
+    let offset = 2;
+    while (offset + 9 <= view.byteLength) {
+      if (view.getUint8(offset) !== 0xff) { offset += 1; continue; }
+      while (offset < view.byteLength && view.getUint8(offset) === 0xff) offset += 1;
+      if (offset >= view.byteLength) break;
+      const marker = view.getUint8(offset);
+      offset += 1;
+      if (marker === 0xd8 || marker === 0xd9 || (marker >= 0xd0 && marker <= 0xd7)) continue;
+      if (offset + 2 > view.byteLength) break;
+      const segmentLength = view.getUint16(offset, false);
+      if (segmentLength < 2 || offset + segmentLength > view.byteLength) break;
+      if (sofMarkers.has(marker) && segmentLength >= 7) {
+        return { width: view.getUint16(offset + 5, false), height: view.getUint16(offset + 3, false), format: "JPEG" };
+      }
+      offset += segmentLength;
+    }
+    return null;
+  }
+
+  if (view.byteLength >= 30 && readAscii(view, 0, 4) === "RIFF" && readAscii(view, 8, 4) === "WEBP") {
+    const chunk = readAscii(view, 12, 4);
+    if (chunk === "VP8X") {
+      return { width: readUint24LE(view, 24) + 1, height: readUint24LE(view, 27) + 1, format: "WebP" };
+    }
+    if (chunk === "VP8L" && view.getUint8(20) === 0x2f) {
+      const bits = view.getUint32(21, true);
+      return { width: (bits & 0x3fff) + 1, height: ((bits >>> 14) & 0x3fff) + 1, format: "WebP" };
+    }
+    if (chunk === "VP8 " && view.byteLength >= 30 && view.getUint8(23) === 0x9d && view.getUint8(24) === 0x01 && view.getUint8(25) === 0x2a) {
+      return { width: view.getUint16(26, true) & 0x3fff, height: view.getUint16(28, true) & 0x3fff, format: "WebP" };
+    }
+  }
+
+  return null;
+}
+
+function validateSourceDimensions(dimensions) {
+  if (!dimensions) return;
+  const { width, height } = dimensions;
+  if (!Number.isFinite(width) || !Number.isFinite(height) || width < 1 || height < 1) {
+    throw new Error("Imagem sem dimensões válidas.");
+  }
+  if (width > MAX_SOURCE_PIXELS / height) {
+    throw new Error("Imagem possui dimensões excessivas (máximo de 60 megapixels).");
+  }
+}
+
+function withTimeout(promise, timeoutMs, message, lateCleanup) {
+  return new Promise((resolve, reject) => {
+    let finished = false;
+    const timer = setTimeout(() => {
+      finished = true;
+      reject(new Error(message));
+      promise.then(value => { if (lateCleanup) lateCleanup(value); }).catch(() => {});
+    }, timeoutMs);
+    promise.then(value => {
+      if (finished) return;
+      finished = true;
+      clearTimeout(timer);
+      resolve(value);
+    }, error => {
+      if (finished) return;
+      finished = true;
+      clearTimeout(timer);
+      reject(error);
+    });
+  });
+}
+
 function loadImageElement(file) {
   return new Promise((resolve, reject) => {
     const objectUrl = URL.createObjectURL(file);
     const image = new Image();
-    image.onload = () => resolve({ source: image, width: image.naturalWidth, height: image.naturalHeight, objectUrl });
-    image.onerror = () => {
+    let finished = false;
+    const finishWithError = message => {
+      if (finished) return;
+      finished = true;
+      clearTimeout(timer);
+      image.onload = null;
+      image.onerror = null;
+      image.src = "";
       URL.revokeObjectURL(objectUrl);
-      reject(new Error("Formato não suportado neste aparelho."));
+      reject(new Error(message));
     };
+    const timer = setTimeout(() => finishWithError("Tempo de decodificação esgotado."), DECODE_TIMEOUT_MS);
+    image.onload = () => {
+      if (finished) return;
+      finished = true;
+      clearTimeout(timer);
+      resolve({ source: image, width: image.naturalWidth, height: image.naturalHeight, objectUrl });
+    };
+    image.onerror = () => finishWithError("Formato não suportado neste aparelho.");
     image.src = objectUrl;
   });
 }
 
+async function createResizedBitmap(file, dimensions) {
+  const scale = dimensions
+    ? Math.min(1, MAX_IMAGE_DIMENSION / Math.max(dimensions.width, dimensions.height))
+    : 1;
+  const options = { imageOrientation: "from-image" };
+  if (dimensions && scale < 1) {
+    options.resizeWidth = Math.max(1, Math.round(dimensions.width * scale));
+    options.resizeHeight = Math.max(1, Math.round(dimensions.height * scale));
+    options.resizeQuality = "high";
+  }
+  const bitmapPromise = createImageBitmap(file, options);
+  return withTimeout(
+    bitmapPromise,
+    DECODE_TIMEOUT_MS,
+    "Tempo de decodificação esgotado.",
+    bitmap => { if (bitmap && typeof bitmap.close === "function") bitmap.close(); }
+  );
+}
+
 async function normalizeImageFile(file) {
+  const dimensions = await inspectImageDimensions(file);
+  validateSourceDimensions(dimensions);
   let source;
   let width;
   let height;
@@ -711,10 +865,10 @@ async function normalizeImageFile(file) {
 
   if ("createImageBitmap" in window) {
     try {
-      source = await createImageBitmap(file, { imageOrientation: "from-image" });
-    } catch (firstError) {
-      try { source = await createImageBitmap(file); }
-      catch (secondError) { source = null; }
+      source = await createResizedBitmap(file, dimensions);
+    } catch (bitmapError) {
+      if (bitmapError.message === "Tempo de decodificação esgotado.") throw bitmapError;
+      source = null;
     }
     if (source) {
       width = source.width;
@@ -728,6 +882,7 @@ async function normalizeImageFile(file) {
     width = loaded.width;
     height = loaded.height;
     objectUrl = loaded.objectUrl;
+    validateSourceDimensions({ width, height });
   }
 
   try {
@@ -771,6 +926,13 @@ async function uploadImageBlob(blob, filename = "capture.jpg") {
   }
 }
 
+function makeNeutralFilename(index) {
+  const randomPart = globalThis.crypto && typeof globalThis.crypto.randomUUID === "function"
+    ? globalThis.crypto.randomUUID()
+    : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+  return `foto-${randomPart}-${index + 1}.jpg`;
+}
+
 function setEntryButtonsDisabled(disabled) {
   const cameraButton = document.getElementById("btn-start");
   const fileButton = document.getElementById("btn-files");
@@ -785,35 +947,63 @@ function updateUploadStatus(title, text, completed, total) {
   document.getElementById("upload-progress-fill").style.width = `${percentage}%`;
 }
 
+function renderUploadFailures(failures) {
+  const list = document.getElementById("upload-failure-list");
+  list.replaceChildren();
+  for (const failure of failures) {
+    const item = document.createElement("li");
+    item.textContent = `${failure.name}: ${failure.reason}`;
+    list.appendChild(item);
+  }
+  list.hidden = failures.length === 0;
+}
+
+function closeUploadStatus() {
+  document.getElementById("upload-status").hidden = true;
+  document.getElementById("upload-status-close").hidden = true;
+  renderUploadFailures([]);
+}
+
 async function processSelectedFiles(files) {
   const status = document.getElementById("upload-status");
+  const closeButton = document.getElementById("upload-status-close");
   let succeeded = 0;
   const failures = [];
+  let completed = 0;
   isUploading = true;
   setEntryButtonsDisabled(true);
   status.hidden = false;
+  closeButton.hidden = true;
+  renderUploadFailures([]);
   updateUploadStatus("Enviando fotos", `Preparando ${files.length} foto(s)...`, 0, files.length);
 
-  let completed = 0;
-  for (const file of files) {
-    try {
-      updateUploadStatus("Enviando fotos", `Processando ${completed + 1} de ${files.length}: ${file.name}`, completed, files.length);
-      if (!file.type.startsWith("image/")) throw new Error("Arquivo não é uma imagem.");
-      if (file.size > MAX_FILE_BYTES) throw new Error("Arquivo maior que 10 MB.");
-      const blob = await normalizeImageFile(file);
-      const safeBaseName = (file.name || "foto").replace(/\.[^.]+$/, "").replace(/[^a-zA-Z0-9_-]+/g, "_").slice(0, 80) || "foto";
-      await uploadImageBlob(blob, `${safeBaseName}.jpg`);
-      succeeded += 1;
-    } catch (error) {
-      console.error("[Device Upload Error]", file.name, error);
-      failures.push({ name: file.name || "arquivo", reason: error.message || "Falha desconhecida" });
+  try {
+    for (const [index, file] of files.entries()) {
+      try {
+        updateUploadStatus("Enviando fotos", `Processando ${index + 1} de ${files.length}: ${file.name}`, completed, files.length);
+        if (index >= MAX_BATCH_FILES) throw new Error("Limite de 20 fotos por lote excedido.");
+        if (!file.type.startsWith("image/")) throw new Error("Arquivo não é uma imagem.");
+        if (file.size > MAX_FILE_BYTES) throw new Error("Arquivo maior que 10 MB.");
+        const blob = await normalizeImageFile(file);
+        await uploadImageBlob(blob, makeNeutralFilename(index));
+        succeeded += 1;
+      } catch (error) {
+        console.error("[Device Upload Error]", file.name, error);
+        failures.push({
+          name: (file.name || "arquivo").slice(0, 100),
+          reason: error.message || "Falha desconhecida"
+        });
+      }
+      completed += 1;
+      updateUploadStatus("Enviando fotos", `${completed} de ${files.length} processada(s)`, completed, files.length);
     }
-    completed += 1;
-    updateUploadStatus("Enviando fotos", `${completed} de ${files.length} processada(s)`, completed, files.length);
+  } catch (error) {
+    failures.push({ name: "lote", reason: error.message || "Falha inesperada" });
+  } finally {
+    isUploading = false;
+    setEntryButtonsDisabled(false);
   }
 
-  isUploading = false;
-  setEntryButtonsDisabled(false);
   const failureText = failures.length ? ` ${failures.length} falharam.` : "";
   updateUploadStatus(
     failures.length ? "Envio concluído com ressalvas" : "Fotos enviadas",
@@ -821,7 +1011,9 @@ async function processSelectedFiles(files) {
     files.length,
     files.length
   );
-  setTimeout(() => { status.hidden = true; }, 2600);
+  renderUploadFailures(failures);
+  if (failures.length) closeButton.hidden = false;
+  else setTimeout(closeUploadStatus, 2600);
   return { succeeded, failed: failures.length, failures };
 }
 
