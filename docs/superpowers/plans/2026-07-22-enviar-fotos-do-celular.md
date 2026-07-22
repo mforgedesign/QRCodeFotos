@@ -85,7 +85,7 @@ if __name__ == '__main__':
 
 - [ ] **Step 2: Executar e confirmar vermelho**
 
-Run: `python3 -m unittest tests/test_device_upload.py -v`  
+Run: `python3 -m unittest tests/test_device_upload.py -v`
 Expected: falhas por ausência de `showNameModal('camera')`, `file-input` e funções de lote.
 
 - [ ] **Step 3: Commit do teste vermelho**
@@ -212,7 +212,7 @@ A criação do download local permanece exclusivamente em `confirmPhoto()`.
 
 - [ ] **Step 6: Rodar testes verdes**
 
-Run: `python3 -m unittest tests/test_device_upload.py -v`  
+Run: `python3 -m unittest tests/test_device_upload.py -v`
 Expected: quatro testes aprovados para sete páginas.
 
 - [ ] **Step 7: Commit da implementação**
@@ -246,7 +246,7 @@ Comparar a lista de `EVENT_ID`, URLs públicas e conteúdo dos PNGs em `projects
 
 - [ ] **Step 1: Push**
 
-Run: `git push origin main`  
+Run: `git push origin main`
 Expected: branch `main` atualizada sem erro.
 
 - [ ] **Step 2: Aguardar GitHub Pages**

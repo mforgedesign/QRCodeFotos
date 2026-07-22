@@ -1,6 +1,6 @@
 # QR Fotos — Enviar fotos do celular
 
-**Data:** 2026-07-22  
+**Data:** 2026-07-22
 **Estado:** Design aprovado para planejamento
 
 ## Objetivo
