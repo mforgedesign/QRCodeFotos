@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>ANA LAÍS 15 ANOS — Fotos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --accent: #C9A84C;
+  --accent-light: #D9A441;
+  --accent-glow: rgba(201, 168, 76, 0.22);
+  --bg: #FFF3F7;
+  --bg-card: #FFE1EC;
+  --bg-card2: #FFD2E2;
+  --text: #5A3A45;
+  --text-bright: #3D2630;
+  --text-muted: #A87888;
+  --success: #4CAF50;
+  --danger: #E53935;
+  --border: rgba(232, 93, 158, 0.15);
+  --border-bright: rgba(232, 93, 158, 0.3);
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Welcome Screen ── */
+#welcome-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  position: relative;
+}
+
+/* Subtle radial glow behind the monogram */
+#welcome-screen::before {
+  content: '';
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Monogram ── */
+.monogram {
+  position: relative;
+  z-index: 1;
+  width: 140px;
+  height: 140px;
+  margin-bottom: 2.5rem;
+  animation: fadeDown 0.8s ease-out both;
+}
+.monogram-ring {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--border-bright);
+  border-radius: 50%;
+}
+.monogram-ring::after {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+}
+.monogram-letter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 3.8rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--accent-light);
+  letter-spacing: 0;
+  line-height: 1;
+}
+.monogram-crown {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.85rem;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-style: normal;
+}
+
+/* ── Title ── */
+.event-title {
+  position: relative;
+  z-index: 1;
+  animation: fadeDown 0.8s ease-out 0.15s both;
+}
+.event-title h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.2rem;
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  color: var(--text-bright);
+  text-transform: uppercase;
+  line-height: 1.2;
+  margin-bottom: 0.4rem;
+}
+.event-title .divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  margin: 0.8rem auto;
+}
+.event-title .subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 300;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* ── Instructions card ── */
+.instructions {
+  position: relative;
+  z-index: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem 1.25rem;
+  margin: 2rem 0;
+  max-width: 340px;
+  width: 100%;
+  animation: fadeDown 0.8s ease-out 0.3s both;
+}
+.instructions p {
+  font-size: 0.875rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+.instructions .step {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  text-align: left;
+  margin-bottom: 0.75rem;
+}
+.instructions .step:last-child { margin-bottom: 0; }
+.step-icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border-bright);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: var(--accent);
+  margin-top: 1px;
+}
+.step-text {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text);
+}
+
+/* ── CTA Button ── */
+.btn-primary {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1rem 2.5rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-light));
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 24px var(--accent-glow);
+  -webkit-appearance: none;
+  animation: fadeDown 0.8s ease-out 0.45s both;
+}
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px var(--accent-glow);
+}
+.btn-primary:active { transform: translateY(0); }
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+.btn-primary .btn-icon { font-size: 1.1rem; }
+
+/* ── Camera Screen ── */
+#camera-screen { display: none; position: fixed; inset: 0; background: #000; z-index: 10; }
+#video-container { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+#camera-video { width: 100%; height: 100%; object-fit: cover; }
+#capture-canvas { display: none; }
+
+.camera-header {
+  position: absolute; top: 0; left: 0; right: 0;
+  padding: 1rem; padding-top: max(1rem, env(safe-area-inset-top));
+  background: linear-gradient(to bottom, rgba(0,0,0,.6), transparent);
+  z-index: 20;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.camera-header span {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.75rem; font-weight: 500;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--accent-light);
+}
+.btn-icon {
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 1px solid rgba(123, 179, 232, 0.4);
+  background: rgba(0,0,0,.4);
+  color: var(--accent-light);
+  font-size: 1.2rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  -webkit-appearance: none;
+}
+
+.camera-footer {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 1.5rem; padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  background: linear-gradient(to top, rgba(0,0,0,.7), transparent);
+  z-index: 20;
+  display: flex; align-items: center; justify-content: center; gap: 2rem;
+}
+.btn-capture {
+  width: 72px; height: 72px; border-radius: 50%;
+  border: 3px solid var(--accent);
+  background: rgba(74, 144, 217, 0.12);
+  cursor: pointer; position: relative;
+  -webkit-appearance: none; transition: all 0.2s;
+}
+.btn-capture::after {
+  content: ''; position: absolute; inset: 6px; border-radius: 50%;
+  background: var(--accent); transition: all 0.2s;
+}
+.btn-capture:active::after { background: var(--accent-light); transform: scale(.9); }
+
+/* ── Review Screen ── */
+#review-screen { display: none; position: fixed; inset: 0; background: #000; z-index: 30; }
+#review-canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.review-footer {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 1.5rem; padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+  background: linear-gradient(to top, rgba(0,0,0,.8), transparent);
+  z-index: 35;
+  display: flex; align-items: center; justify-content: center; gap: 1.5rem;
+}
+.btn-action {
+  padding: .9rem 2rem; font-size: .9rem;
+  font-family: 'Inter', sans-serif; font-weight: 500;
+  letter-spacing: .06em; border: none; border-radius: 50px;
+  cursor: pointer; -webkit-appearance: none; transition: all .2s;
+  display: flex; align-items: center; gap: .4rem;
+}
+.btn-delete { background: rgba(229,57,53,.15); color: var(--danger); border: 1px solid rgba(229,57,53,.4); }
+.btn-confirm { background: linear-gradient(135deg, var(--success), #66BB6A); color: #fff; box-shadow: 0 4px 15px rgba(76,175,80,.3); }
+
+/* ── Toast ── */
+.toast {
+  position: fixed; top: 2rem; left: 50%;
+  transform: translateX(-50%) translateY(-100px);
+  background: var(--bg-card); border: 1px solid var(--border-bright);
+  color: var(--text); padding: 1rem 1.5rem; border-radius: 12px;
+  font-size: 0.875rem; font-weight: 300;
+  z-index: 100; transition: transform .4s ease;
+  text-align: center; max-width: 320px; width: 90%;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── Error Screen ── */
+#error-screen { display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; text-align: center; }
+.error-icon { font-size: 3rem; margin-bottom: 1.5rem; }
+.error-text { color: var(--text-muted); line-height: 1.7; margin-bottom: 2rem; max-width: 320px; font-weight: 300; }
+
+/* ── Name Modal ── */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(13, 27, 42, 0.92);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200; padding: 1.5rem;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+.modal-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px; padding: 2.5rem 2rem;
+  max-width: 360px; width: 100%; text-align: center;
+}
+.modal-box .modal-monogram {
+  width: 64px; height: 64px; margin: 0 auto 1.5rem;
+  border: 1px solid var(--border-bright); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2rem; font-style: italic; color: var(--accent-light);
+}
+.modal-box h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.3rem; font-weight: 400;
+  color: var(--text-bright); margin-bottom: .5rem;
+}
+.modal-box p {
+  color: var(--text-muted); font-size: 0.85rem; font-weight: 300;
+  margin-bottom: 1.5rem; line-height: 1.6;
+}
+.modal-box input[type="text"] {
+  width: 100%; padding: .9rem 1.2rem;
+  font-family: 'Inter', sans-serif; font-size: 1rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 12px; color: var(--text-bright);
+  outline: none; margin-bottom: 1rem; text-align: center;
+  transition: border-color .2s;
+}
+.modal-box input[type="text"]:focus { border-color: var(--accent); }
+.modal-box input[type="text"]::placeholder { color: var(--text-muted); }
+
+/* ── Spinner ── */
+.spinner {
+  width: 40px; height: 40px;
+  border: 3px solid rgba(74, 144, 217, 0.2);
+  border-top-color: var(--accent);
+  border-radius: 50%; animation: spin .8s linear infinite;
+  margin: 1rem auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── Animations ── */
+@keyframes fadeDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Responsive ── */
+@media (max-width: 380px) {
+  .event-title h1 { font-size: 1.8rem; }
+  .monogram { width: 120px; height: 120px; }
+  .monogram-letter { font-size: 3.2rem; }
+  .btn-capture { width: 64px; height: 64px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; }
+}
+
+
+/* ── Camera or device upload entry points ── */
+.entry-actions {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: min(100%, 340px);
+}
+.entry-actions > button { width: 100%; }
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1rem 2rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-bright, var(--text));
+  background: var(--bg-card);
+  border: 1px solid var(--border-bright, rgba(201, 168, 76, 0.4));
+  border-radius: 50px;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+.btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+.upload-status {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.82);
+}
+.upload-status[hidden] { display: none; }
+.upload-status-card {
+  width: min(100%, 360px);
+  padding: 2rem;
+  text-align: center;
+  border-radius: 20px;
+  color: var(--text-bright, var(--text));
+  background: var(--bg-card);
+  border: 1px solid var(--border-bright, rgba(201, 168, 76, 0.4));
+}
+.upload-status-card strong,
+.upload-status-card span { display: block; }
+.upload-status-card span { margin-top: 0.65rem; color: var(--text-muted); }
+.upload-progress {
+  height: 8px;
+  margin-top: 1.25rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+}
+.upload-progress-fill {
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent, var(--gold));
+  transition: width 0.25s ease;
+}
+.upload-failure-list {
+  max-height: 180px;
+  margin: 1rem 0 0;
+  padding-left: 1.25rem;
+  overflow-y: auto;
+  text-align: left;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+.upload-failure-list[hidden] { display: none; }
+#upload-status-close {
+  width: 100%;
+  margin-top: 1rem;
+}
+#upload-status-close[hidden] { display: none; }
+
+</style>
+</head>
+<body>
+
+<!-- Name Modal -->
+<div id="name-modal" style="display:none;">
+  <div class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-monogram">A</div>
+      <h2>Como você se chama?</h2>
+      <p>Suas fotos serão organizadas com seu nome na galeria do evento.</p>
+      <input type="text" id="guest-name" placeholder="Seu nome ou apelido" maxlength="60" autocomplete="off">
+      <button class="btn-primary" style="width:100%;" onclick="confirmName()">Confirmar e Abrir Câmera</button>
+    </div>
+  </div>
+</div>
+
+<!-- Welcome Screen -->
+<div id="welcome-screen">
+  <div class="monogram">
+    <div class="monogram-ring"></div>
+    <div class="monogram-letter">A</div>
+  </div>
+  <div class="event-title">
+    <h1>ANA LAÍS</h1>
+    <div class="divider"></div>
+    <p class="subtitle">15 Anos • 15 ANOS</p>
+  </div>
+  <div class="instructions">
+    <div class="step">
+      <div class="step-icon">1</div>
+      <div class="step-text">Toque no botão abaixo e permita o acesso à câmera</div>
+    </div>
+    <div class="step">
+      <div class="step-icon">2</div>
+      <div class="step-text">Tire suas fotos — elas são salvas no seu celular e na galeria</div>
+    </div>
+    <div class="step">
+      <div class="step-icon">3</div>
+      <div class="step-text">Revise cada foto antes de confirmar</div>
+    </div>
+  </div>
+  <button class="btn-primary" id="btn-start" onclick="showNameModal()">
+    <span class="btn-icon">📷</span> Tirar Foto
+  </button>
+</div>
+
+<!-- Camera Screen -->
+<div id="camera-screen">
+  <div id="video-container"><video id="camera-video" autoplay playsinline muted></video></div>
+  <div class="camera-header">
+    <span>ANA LAÍS</span>
+    <button class="btn-icon" onclick="flipCamera()" title="Trocar câmera">🔄</button>
+  </div>
+  <div class="camera-footer">
+    <button class="btn-capture" onclick="capturePhoto()" title="Capturar"></button>
+  </div>
+</div>
+
+<!-- Review Screen -->
+<div id="review-screen">
+  <canvas id="review-canvas"></canvas>
+  <div class="review-footer">
+    <button class="btn-action btn-delete" onclick="deletePhoto()">🗑 Apagar</button>
+    <button class="btn-action btn-confirm" onclick="confirmPhoto()">✓ Ficou Boa</button>
+  </div>
+</div>
+
+<!-- Error Screen -->
+<div id="error-screen">
+  <div class="error-icon">📵</div>
+  <h2 style="font-family:'Playfair Display',serif;color:var(--text-bright);margin-bottom:1rem;">Câmera Bloqueada</h2>
+  <p class="error-text" id="error-text">Você precisa liberar a permissão de câmera do seu navegador para participar.<br><br>Por favor, atualize a página e clique em "Permitir".</p>
+  <button class="btn-primary" onclick="location.reload()">🔄 Tentar Novamente</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<input type="file" id="file-input" accept="image/*" multiple hidden>
+<div id="upload-status" class="upload-status" aria-live="polite" hidden>
+  <div class="upload-status-card">
+    <strong id="upload-status-title">Enviando fotos</strong>
+    <span id="upload-status-text">Preparando...</span>
+    <div class="upload-progress"><div id="upload-progress-fill" class="upload-progress-fill"></div></div>
+    <ul id="upload-failure-list" class="upload-failure-list" hidden></ul>
+    <button type="button" id="upload-status-close" class="btn-secondary" onclick="closeUploadStatus()" hidden>Fechar</button>
+  </div>
+</div>
+
+<canvas id="capture-canvas" style="display:none;"></canvas>
+
+<script>
+const EVENT_ID = "ana-lais-15-anos";
+const API_URL = "https://qrfotos.duckdns.org/upload/" + EVENT_ID;
+let currentStream = null, useFrontCamera = false, isUploading = false, guestName = "";
+
+function showNameModal() {
+  document.getElementById("name-modal").style.display = "block";
+  setTimeout(() => document.getElementById("guest-name").focus(), 300);
+}
+function confirmName() {
+  guestName = document.getElementById("guest-name").value.trim() || "Anônimo";
+  document.getElementById("name-modal").style.display = "none";
+  startCamera();
+}
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter" && document.getElementById("name-modal").style.display !== "none") confirmName();
+});
+
+const video = document.getElementById("camera-video"),
+      captureCanvas = document.getElementById("capture-canvas"),
+      reviewCanvas = document.getElementById("review-canvas");
+const captureCtx = captureCanvas.getContext("2d"),
+      reviewCtx = reviewCanvas.getContext("2d");
+
+async function startCamera() {
+  const b = document.getElementById("btn-start");
+  b.disabled = true;
+  b.innerHTML = '<div class="spinner" style="width:24px;height:24px;border-width:2px;margin:0;display:inline-block;vertical-align:middle;"></div> Carregando...';
+  try {
+    await attachStream(await getCameraStream(false));
+    showScreen("camera-screen");
+  } catch (err) {
+    b.disabled = false;
+    b.innerHTML = '<span class="btn-icon">📷</span> Tirar Foto';
+    if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
+      showScreen("error-screen");
+    } else {
+      try {
+        await attachStream(await navigator.mediaDevices.getUserMedia({ video: true }));
+        showScreen("camera-screen");
+      } catch (e2) {
+        document.getElementById("error-text").textContent = "Não foi possível acessar a câmera.";
+        showScreen("error-screen");
+      }
+    }
+  }
+}
+
+async function getCameraStream(front) {
+  const C = front
+    ? [{ video: { facingMode: { exact: "user" } } }, { video: { facingMode: "user" } }, { video: true }]
+    : [{ video: { facingMode: { exact: "environment" } } }, { video: { facingMode: "environment" } }, { video: true }];
+  let last;
+  for (const c of C) {
+    try { return await navigator.mediaDevices.getUserMedia(c); }
+    catch (e) { last = e; if (e.name === "NotAllowedError") throw e; }
+  }
+  throw last;
+}
+
+async function attachStream(s) {
+  if (currentStream) currentStream.getTracks().forEach(t => t.stop());
+  currentStream = s;
+  video.srcObject = s;
+  return new Promise(r => {
+    video.onloadedmetadata = () => video.play().then(r).catch(r);
+    setTimeout(r, 2000);
+  });
+}
+
+async function flipCamera() {
+  useFrontCamera = !useFrontCamera;
+  try { await attachStream(await getCameraStream(useFrontCamera)); }
+  catch (e) { useFrontCamera = !useFrontCamera; showToast("Não foi possível trocar a câmera."); }
+}
+
+function capturePhoto() {
+  if (!currentStream) return;
+  let w = video.videoWidth || 1280, h = video.videoHeight || 720;
+  const M = 1920;
+  if (w > M || h > M) { if (w >= h) { h = Math.round(h * M / w); w = M; } else { w = Math.round(w * M / h); h = M; } }
+  captureCanvas.width = w; captureCanvas.height = h;
+  captureCtx.drawImage(video, 0, 0, w, h);
+  reviewCanvas.width = w; reviewCanvas.height = h;
+  reviewCtx.drawImage(captureCanvas, 0, 0);
+  showScreen("review-screen");
+}
+
+function deletePhoto() {
+  captureCtx.clearRect(0, 0, captureCanvas.width, captureCanvas.height);
+  reviewCtx.clearRect(0, 0, reviewCanvas.width, reviewCanvas.height);
+  showScreen("camera-screen");
+}
+
+async function confirmPhoto() {
+  if (isUploading) return;
+  isUploading = true;
+  const btn = document.querySelector(".btn-confirm"), orig = btn.innerHTML;
+  btn.innerHTML = '<div class="spinner" style="width:20px;height:20px;border-width:2px;margin:0;display:inline-block;vertical-align:middle;"></div> Salvando...';
+  let localSaved = false;
+  try {
+    const du = captureCanvas.toDataURL("image/jpeg", 0.90);
+    const a = document.createElement("a");
+    a.href = du; a.download = EVENT_ID.toUpperCase().replace(/-/g, "_") + "_" + Date.now() + ".jpg";
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    localSaved = true;
+  } catch (e) {}
+  let serverSaved = false;
+  try {
+    const blob = await new Promise((res, rej) => captureCanvas.toBlob(b => b ? res(b) : rej(new Error("toBlob failed")), "image/jpeg", 0.85));
+    const fd = new FormData();
+    fd.append("image", blob, "capture.jpg");
+    fd.append("nome", guestName);
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 15000);
+    const r = await fetch(API_URL, { method: "POST", body: fd, signal: ctrl.signal });
+    clearTimeout(t);
+    if (r.ok) serverSaved = true;
+  } catch (e) {}
+  isUploading = false;
+  btn.innerHTML = orig;
+  if (serverSaved) showToast("✨ Foto salva com sucesso!");
+  else if (localSaved) showToast("📱 Foto salva no dispositivo!");
+  else showToast("⚠️ Erro ao salvar. Tente novamente.");
+  setTimeout(() => deletePhoto(), 1500);
+}
+
+function showScreen(id) {
+  ["welcome-screen", "camera-screen", "review-screen", "error-screen"].forEach(s => {
+    const el = document.getElementById(s);
+    el.style.display = (s === id)
+      ? ((s === "camera-screen" || s === "review-screen") ? "block" : "flex")
+      : "none";
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 4000);
+}
+
+
+
+// ═══════════ DEVICE IMAGE PIPELINE ═══════════
+const MAX_FILE_BYTES = 10 * 1024 * 1024;
+const MAX_BATCH_FILES = 20;
+const MAX_SOURCE_PIXELS = 60_000_000;
+const MAX_IMAGE_DIMENSION = 1920;
+const DECODE_TIMEOUT_MS = 15000;
+const HEADER_READ_BYTES = 512 * 1024;
+
+function canvasToBlob(canvas, type = "image/jpeg", quality = 0.85) {
+  return new Promise((resolve, reject) => {
+    canvas.toBlob(blob => blob ? resolve(blob) : reject(new Error("Não foi possível converter a imagem.")), type, quality);
+  });
+}
+
+function readAscii(view, offset, length) {
+  let value = "";
+  for (let i = 0; i < length && offset + i < view.byteLength; i += 1) {
+    value += String.fromCharCode(view.getUint8(offset + i));
+  }
+  return value;
+}
+
+function readUint24LE(view, offset) {
+  return view.getUint8(offset) | (view.getUint8(offset + 1) << 8) | (view.getUint8(offset + 2) << 16);
+}
+
+async function inspectImageDimensions(file) {
+  const buffer = await file.slice(0, HEADER_READ_BYTES).arrayBuffer();
+  const view = new DataView(buffer);
+  if (view.byteLength < 10) return null;
+
+  if (view.byteLength >= 24 && view.getUint32(0, false) === 0x89504e47 && view.getUint32(4, false) === 0x0d0a1a0a) {
+    return { width: view.getUint32(16, false), height: view.getUint32(20, false), format: "PNG" };
+  }
+
+  const signature = readAscii(view, 0, 6);
+  if (signature === "GIF87a" || signature === "GIF89a") {
+    return { width: view.getUint16(6, true), height: view.getUint16(8, true), format: "GIF" };
+  }
+
+  if (view.getUint16(0, false) === 0xffd8) {
+    const sofMarkers = new Set([0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce, 0xcf]);
+    let offset = 2;
+    while (offset + 9 <= view.byteLength) {
+      if (view.getUint8(offset) !== 0xff) { offset += 1; continue; }
+      while (offset < view.byteLength && view.getUint8(offset) === 0xff) offset += 1;
+      if (offset >= view.byteLength) break;
+      const marker = view.getUint8(offset);
+      offset += 1;
+      if (marker === 0xd8 || marker === 0xd9 || (marker >= 0xd0 && marker <= 0xd7)) continue;
+      if (offset + 2 > view.byteLength) break;
+      const segmentLength = view.getUint16(offset, false);
+      if (segmentLength < 2 || offset + segmentLength > view.byteLength) break;
+      if (sofMarkers.has(marker) && segmentLength >= 7) {
+        return { width: view.getUint16(offset + 5, false), height: view.getUint16(offset + 3, false), format: "JPEG" };
+      }
+      offset += segmentLength;
+    }
+    return null;
+  }
+
+  if (view.byteLength >= 30 && readAscii(view, 0, 4) === "RIFF" && readAscii(view, 8, 4) === "WEBP") {
+    const chunk = readAscii(view, 12, 4);
+    if (chunk === "VP8X") {
+      return { width: readUint24LE(view, 24) + 1, height: readUint24LE(view, 27) + 1, format: "WebP" };
+    }
+    if (chunk === "VP8L" && view.getUint8(20) === 0x2f) {
+      const bits = view.getUint32(21, true);
+      return { width: (bits & 0x3fff) + 1, height: ((bits >>> 14) & 0x3fff) + 1, format: "WebP" };
+    }
+    if (chunk === "VP8 " && view.byteLength >= 30 && view.getUint8(23) === 0x9d && view.getUint8(24) === 0x01 && view.getUint8(25) === 0x2a) {
+      return { width: view.getUint16(26, true) & 0x3fff, height: view.getUint16(28, true) & 0x3fff, format: "WebP" };
+    }
+  }
+
+  return null;
+}
+
+function validateSourceDimensions(dimensions) {
+  if (!dimensions) return;
+  const { width, height } = dimensions;
+  if (!Number.isFinite(width) || !Number.isFinite(height) || width < 1 || height < 1) {
+    throw new Error("Imagem sem dimensões válidas.");
+  }
+  if (width > MAX_SOURCE_PIXELS / height) {
+    throw new Error("Imagem possui dimensões excessivas (máximo de 60 megapixels).");
+  }
+}
+
+function withTimeout(promise, timeoutMs, message, lateCleanup) {
+  return new Promise((resolve, reject) => {
+    let finished = false;
+    const timer = setTimeout(() => {
+      finished = true;
+      reject(new Error(message));
+      promise.then(value => { if (lateCleanup) lateCleanup(value); }).catch(() => {});
+    }, timeoutMs);
+    promise.then(value => {
+      if (finished) return;
+      finished = true;
+      clearTimeout(timer);
+      resolve(value);
+    }, error => {
+      if (finished) return;
+      finished = true;
+      clearTimeout(timer);
+      reject(error);
+    });
+  });
+}
+
+function loadImageElement(file) {
+  return new Promise((resolve, reject) => {
+    const objectUrl = URL.createObjectURL(file);
+    const image = new Image();
+    let finished = false;
+    const finishWithError = message => {
+      if (finished) return;
+      finished = true;
+      clearTimeout(timer);
+      image.onload = null;
+      image.onerror = null;
+      image.src = "";
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error(message));
+    };
+    const timer = setTimeout(() => finishWithError("Tempo de decodificação esgotado."), DECODE_TIMEOUT_MS);
+    image.onload = () => {
+      if (finished) return;
+      finished = true;
+      clearTimeout(timer);
+      resolve({ source: image, width: image.naturalWidth, height: image.naturalHeight, objectUrl });
+    };
+    image.onerror = () => finishWithError("Formato não suportado neste aparelho.");
+    image.src = objectUrl;
+  });
+}
+
+async function createResizedBitmap(file, dimensions) {
+  const scale = dimensions
+    ? Math.min(1, MAX_IMAGE_DIMENSION / Math.max(dimensions.width, dimensions.height))
+    : 1;
+  const options = { imageOrientation: "from-image" };
+  if (dimensions && scale < 1) {
+    options.resizeWidth = Math.max(1, Math.round(dimensions.width * scale));
+    options.resizeHeight = Math.max(1, Math.round(dimensions.height * scale));
+    options.resizeQuality = "high";
+  }
+  const bitmapPromise = createImageBitmap(file, options);
+  return withTimeout(
+    bitmapPromise,
+    DECODE_TIMEOUT_MS,
+    "Tempo de decodificação esgotado.",
+    bitmap => { if (bitmap && typeof bitmap.close === "function") bitmap.close(); }
+  );
+}
+
+async function normalizeImageFile(file) {
+  const dimensions = await inspectImageDimensions(file);
+  validateSourceDimensions(dimensions);
+  let source;
+  let width;
+  let height;
+  let objectUrl = null;
+
+  if ("createImageBitmap" in window) {
+    try {
+      source = await createResizedBitmap(file, dimensions);
+    } catch (bitmapError) {
+      if (bitmapError.message === "Tempo de decodificação esgotado.") throw bitmapError;
+      source = null;
+    }
+    if (source) {
+      width = source.width;
+      height = source.height;
+    }
+  }
+
+  if (!source) {
+    const loaded = await loadImageElement(file);
+    source = loaded.source;
+    width = loaded.width;
+    height = loaded.height;
+    objectUrl = loaded.objectUrl;
+    validateSourceDimensions({ width, height });
+  }
+
+  try {
+    if (!width || !height) throw new Error("Imagem sem dimensões válidas.");
+    const scale = Math.min(1, MAX_IMAGE_DIMENSION / Math.max(width, height));
+    const outputWidth = Math.max(1, Math.round(width * scale));
+    const outputHeight = Math.max(1, Math.round(height * scale));
+    const canvas = document.createElement("canvas");
+    canvas.width = outputWidth;
+    canvas.height = outputHeight;
+    const context = canvas.getContext("2d", { alpha: false });
+    if (!context) throw new Error("Este navegador não conseguiu preparar a imagem.");
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, outputWidth, outputHeight);
+    context.drawImage(source, 0, 0, outputWidth, outputHeight);
+    return await canvasToBlob(canvas, "image/jpeg", 0.85);
+  } finally {
+    if (source && typeof source.close === "function") source.close();
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+  }
+}
+
+async function uploadImageBlob(blob, filename = "capture.jpg") {
+  const formData = new FormData();
+  formData.append("image", blob, filename);
+  formData.append("nome", guestName);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 15000);
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      body: formData,
+      signal: controller.signal
+    });
+    if (!response.ok) throw new Error(`Servidor respondeu HTTP ${response.status}.`);
+  } catch (error) {
+    if (error.name === "AbortError") throw new Error("Tempo de envio esgotado.");
+    throw error;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+function makeNeutralFilename(index) {
+  const randomPart = globalThis.crypto && typeof globalThis.crypto.randomUUID === "function"
+    ? globalThis.crypto.randomUUID()
+    : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 12)}`;
+  return `foto-${randomPart}-${index + 1}.jpg`;
+}
+
+function setEntryButtonsDisabled(disabled) {
+  const cameraButton = document.getElementById("btn-start");
+  const fileButton = document.getElementById("btn-files");
+  if (cameraButton) cameraButton.disabled = disabled;
+  if (fileButton) fileButton.disabled = disabled;
+}
+
+function updateUploadStatus(title, text, completed, total) {
+  document.getElementById("upload-status-title").textContent = title;
+  document.getElementById("upload-status-text").textContent = text;
+  const percentage = total ? Math.round((completed / total) * 100) : 0;
+  document.getElementById("upload-progress-fill").style.width = `${percentage}%`;
+}
+
+function renderUploadFailures(failures) {
+  const list = document.getElementById("upload-failure-list");
+  list.replaceChildren();
+  for (const failure of failures) {
+    const item = document.createElement("li");
+    item.textContent = `${failure.name}: ${failure.reason}`;
+    list.appendChild(item);
+  }
+  list.hidden = failures.length === 0;
+}
+
+function closeUploadStatus() {
+  document.getElementById("upload-status").hidden = true;
+  document.getElementById("upload-status-close").hidden = true;
+  renderUploadFailures([]);
+}
+
+async function processSelectedFiles(files) {
+  const status = document.getElementById("upload-status");
+  const closeButton = document.getElementById("upload-status-close");
+  let succeeded = 0;
+  const failures = [];
+  let completed = 0;
+  isUploading = true;
+  setEntryButtonsDisabled(true);
+  status.hidden = false;
+  closeButton.hidden = true;
+  renderUploadFailures([]);
+  updateUploadStatus("Enviando fotos", `Preparando ${files.length} foto(s)...`, 0, files.length);
+
+  try {
+    for (const [index, file] of files.entries()) {
+      try {
+        updateUploadStatus("Enviando fotos", `Processando ${index + 1} de ${files.length}: ${file.name}`, completed, files.length);
+        if (index >= MAX_BATCH_FILES) throw new Error("Limite de 20 fotos por lote excedido.");
+        if (!file.type.startsWith("image/")) throw new Error("Arquivo não é uma imagem.");
+        if (file.size > MAX_FILE_BYTES) throw new Error("Arquivo maior que 10 MB.");
+        const blob = await normalizeImageFile(file);
+        await uploadImageBlob(blob, makeNeutralFilename(index));
+        succeeded += 1;
+      } catch (error) {
+        console.error("[Device Upload Error]", file.name, error);
+        failures.push({
+          name: (file.name || "arquivo").slice(0, 100),
+          reason: error.message || "Falha desconhecida"
+        });
+      }
+      completed += 1;
+      updateUploadStatus("Enviando fotos", `${completed} de ${files.length} processada(s)`, completed, files.length);
+    }
+  } catch (error) {
+    failures.push({ name: "lote", reason: error.message || "Falha inesperada" });
+  } finally {
+    isUploading = false;
+    setEntryButtonsDisabled(false);
+  }
+
+  const failureText = failures.length ? ` ${failures.length} falharam.` : "";
+  updateUploadStatus(
+    failures.length ? "Envio concluído com ressalvas" : "Fotos enviadas",
+    `${succeeded} foto(s) enviada(s).${failureText}`,
+    files.length,
+    files.length
+  );
+  renderUploadFailures(failures);
+  if (failures.length) closeButton.hidden = false;
+  else setTimeout(closeUploadStatus, 2600);
+  return { succeeded, failed: failures.length, failures };
+}
+
+// Camera captures still download locally; selected device files never do.
+async function confirmPhoto() {
+  if (isUploading) return;
+  isUploading = true;
+  const button = document.querySelector(".btn-confirm");
+  const originalText = button.innerHTML;
+  button.innerHTML = '<div class="spinner" style="width:20px;height:20px;border-width:2px;margin:0"></div> Salvando...';
+
+  let localSaved = false;
+  try {
+    const dataUrl = captureCanvas.toDataURL("image/jpeg", 0.90);
+    const link = document.createElement("a");
+    const eventPrefix = typeof EVENT_ID !== "undefined" ? EVENT_ID.toUpperCase().replace(/-/g, "_") : "QRFOTOS";
+    link.href = dataUrl;
+    link.download = `${eventPrefix}_${Date.now()}.jpg`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    localSaved = true;
+  } catch (error) {
+    console.error("[Local Save Error]", error);
+  }
+
+  let serverSaved = false;
+  try {
+    const blob = await canvasToBlob(captureCanvas, "image/jpeg", 0.85);
+    await uploadImageBlob(blob, "capture.jpg");
+    serverSaved = true;
+  } catch (error) {
+    console.error("[Camera Upload Error]", error);
+  }
+
+  isUploading = false;
+  button.innerHTML = originalText;
+  if (serverSaved) showToast("Foto salva com sucesso!");
+  else if (localSaved) showToast("Foto salva no dispositivo. Servidor indisponível.");
+  else showToast("Erro ao salvar. Tente novamente.");
+  setTimeout(() => deletePhoto(), 1500);
+}
+
+// ═══════════ CAMERA OR DEVICE UPLOAD ENTRY ═══════════
+let pendingAction = "camera";
+
+function showNameModal(action = "camera") {
+  pendingAction = action;
+  const confirmButton = document.getElementById("btn-confirm-name");
+  if (confirmButton) {
+    confirmButton.textContent = action === "files"
+      ? "Continuar para Selecionar Fotos"
+      : "Confirmar e Abrir Câmera";
+  }
+  document.getElementById("name-modal").style.display = "block";
+  setTimeout(() => document.getElementById("guest-name").focus(), 300);
+}
+
+function confirmName() {
+  guestName = document.getElementById("guest-name").value.trim() || "Anônimo";
+  document.getElementById("name-modal").style.display = "none";
+  if (pendingAction === "files") document.getElementById("file-input").click();
+  else startCamera();
+}
+
+(function setupEntryActions() {
+  const confirmButton = document.querySelector('#name-modal button[onclick="confirmName()"]');
+  if (confirmButton) confirmButton.id = "btn-confirm-name";
+
+  const startButton = document.getElementById("btn-start");
+  if (!startButton || startButton.closest(".entry-actions")) return;
+  startButton.setAttribute("onclick", "showNameModal('camera')");
+  startButton.innerHTML = '<span aria-hidden="true">📷</span> Abrir Câmera';
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "entry-actions";
+  startButton.parentNode.insertBefore(wrapper, startButton);
+  wrapper.appendChild(startButton);
+
+  const fileButton = document.createElement("button");
+  fileButton.type = "button";
+  fileButton.id = "btn-files";
+  fileButton.className = "btn-secondary";
+  fileButton.setAttribute("onclick", "showNameModal('files')");
+  fileButton.innerHTML = '<span aria-hidden="true">▣</span> Enviar do Celular';
+  wrapper.appendChild(fileButton);
+
+  const steps = document.querySelectorAll(".instructions .step-text");
+  if (steps.length >= 3) {
+    steps[0].textContent = "Escolha abrir a câmera ou enviar fotos do celular";
+    steps[1].textContent = "Informe seu nome para organizar as fotos";
+    steps[2].textContent = "Revise as capturas ou envie várias fotos de uma vez";
+  } else {
+    const instructions = document.querySelector(".instructions p");
+    if (instructions) instructions.innerHTML = "Escolha <strong>Abrir Câmera</strong> para tirar uma foto agora ou <strong>Enviar do Celular</strong> para selecionar várias imagens.<br><br>Seu nome organizará tudo na galeria do evento.";
+  }
+
+  document.getElementById("file-input").addEventListener("change", event => {
+    const files = Array.from(event.target.files || []);
+    event.target.value = "";
+    if (files.length) processSelectedFiles(files);
+  });
+})();
+
+</script>
+</body>
+</html>
